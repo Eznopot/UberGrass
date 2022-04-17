@@ -2,5 +2,9 @@
   "appTitle": "ubergrass",
   "@appTitle": {
     "description": "The title of the application"
-  }
+  },
+  "homeTitle" :  "UberGrass",
+  "homeDescription" : "Vous retrouverez ici vos command",
+  "drawerTitle" : "All page",
+  "registerTitle": "Register"
 }

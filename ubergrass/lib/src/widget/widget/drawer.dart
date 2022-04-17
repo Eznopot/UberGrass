@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-
-import '../../constant/string.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({Key? key}) : super(key: key);
+  MyDrawer({Key? key, required this.context}) : super(key: key);
+
+  BuildContext context;
 
   Widget drawerBodyItem(
       {required IconData icon,
@@ -42,11 +43,11 @@ class MyDrawer extends StatelessWidget {
                   ]),
             ),
           ),
-          const Positioned(
+          Positioned(
               bottom: 12.0,
               left: 16.0,
-              child: Text(DrawerTitle,
-                  style: TextStyle(
+              child: Text(AppLocalizations.of(context)!.drawerTitle,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20.0,
                     fontWeight: FontWeight.w500,
