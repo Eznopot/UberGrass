@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ubergrass/src/register/register_controller.dart';
+import 'package:ubergrass/src/widget/widget/button/progress_button.dart';
+import 'package:ubergrass/src/widget/widget/textfield/custom_text_field.dart';
 import '../constant/size.dart';
 import '../widget/widget/placement/custom_center.dart';
 
@@ -12,12 +15,20 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
+  RegisterController controller = RegisterController();
+  TextEditingController textEditingControllerName = TextEditingController();
+  TextEditingController textEditingControllerPassword = TextEditingController();
+  TextEditingController textEditingControllerRePassword = TextEditingController();
+  TextEditingController textEditingControllerTelephone = TextEditingController();
+  ButtonState buttonState = ButtonState.normal;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Stack(
+        body: SafeArea(
+            child: SingleChildScrollView(
+      child: Stack(
         children: <Widget>[
           CustomCenter(
             padding: EdgeInsets.symmetric(vertical: size.height / 4),
@@ -30,21 +41,44 @@ class _RegisterViewState extends State<RegisterView> {
                       fontSize: largeTextSize, fontWeight: FontWeight.bold),
                 ),
                 CustomCenter(
-                  padding: EdgeInsets.symmetric(
-                      vertical: mediumMargin, horizontal: mediumMargin),
-                  child: Text(
-                    "",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.montserrat(
-                      fontSize: mediumTextSize, fontWeight: FontWeight.bold,
+                    padding: EdgeInsets.symmetric(
+                        vertical: mediumMargin, horizontal: mediumMargin),
+                    child: Column(
+                      children: [
+                        CustomTextField(
+                          labelText: "Name",
+                        ),
+                        SizedBox(height: mediumMargin),
+                        CustomTextField(
+                          labelText: "Password",
+                          isPassword: true,
+                        ),
+                        SizedBox(height: mediumMargin),
+                        CustomTextField(
+                          labelText: "Re-enter Password",
+                          isPassword: true,
+                        ),
+                        SizedBox(height: mediumMargin),
+                        CustomTextField(
+                          labelText: "Telephone number",
+                          textInputType: TextInputType.phone,
+                        ),
+                      ],
                     ),
-                  ),
                 ),
+                CustomCenter(
+                  padding: EdgeInsets.symmetric(
+                    vertical: mediumMargin, horizontal: mediumMargin),
+                  child: ProgressButton(
+                    buttonState: buttonState,
+                    onPressed: () {},
+                  ),
+                )
               ],
             ),
           ),
         ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+    )));
   }
 }
