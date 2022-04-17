@@ -21,10 +21,8 @@ class _RegisterViewState extends State<RegisterView> {
   RegisterController controller = RegisterController();
   TextEditingController textEditingControllerName = TextEditingController();
   TextEditingController textEditingControllerPassword = TextEditingController();
-  TextEditingController textEditingControllerRePassword =
-      TextEditingController();
-  TextEditingController textEditingControllerTelephone =
-      TextEditingController();
+  TextEditingController textEditingControllerRePassword = TextEditingController();
+  TextEditingController textEditingControllerTelephone = TextEditingController();
   ButtonState buttonState = ButtonState.normal;
 
   @override
