@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -5,7 +6,28 @@ import 'package:ubergrass/src/register/register_controller.dart';
 import 'package:ubergrass/src/widget/widget/button/progress_button.dart';
 import 'package:ubergrass/src/widget/widget/textfield/custom_text_field.dart';
 import '../constant/size.dart';
+import '../firebase/firebase.dart';
 import '../widget/widget/placement/custom_center.dart';
+
+
+class User {
+  User({
+    required this.name,
+  });
+
+  User.fromJson(Map<String, Object?> json)
+      : this(
+    name: (json['name']! as String),
+  );
+
+  final String name;
+
+  Map<String, Object?> toJson() {
+    return {
+      'name': name,
+    };
+  }
+}
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -21,6 +43,18 @@ class _RegisterViewState extends State<RegisterView> {
   TextEditingController textEditingControllerRePassword = TextEditingController();
   TextEditingController textEditingControllerTelephone = TextEditingController();
   ButtonState buttonState = ButtonState.normal;
+
+  @override
+  void initState() {
+    super.initState();
+    FirebasePackage.getDB().collection('User')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        print(doc["name"]);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
