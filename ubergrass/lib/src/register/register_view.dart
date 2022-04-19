@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ubergrass/src/model/users.dart';
 import 'package:ubergrass/src/register/register_controller.dart';
 import 'package:ubergrass/src/widget/widget/button/progress_button.dart';
 import 'package:ubergrass/src/widget/widget/textfield/custom_text_field.dart';
@@ -21,9 +22,12 @@ class _RegisterViewState extends State<RegisterView> {
   RegisterController controller = RegisterController();
   TextEditingController textEditingControllerName = TextEditingController();
   TextEditingController textEditingControllerPassword = TextEditingController();
-  TextEditingController textEditingControllerRePassword = TextEditingController();
-  TextEditingController textEditingControllerTelephone = TextEditingController();
+  TextEditingController textEditingControllerRePassword =
+      TextEditingController();
+  TextEditingController textEditingControllerTelephone =
+      TextEditingController();
   ButtonState buttonState = ButtonState.normal;
+  bool needPhone = true;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +38,7 @@ class _RegisterViewState extends State<RegisterView> {
           child: Stack(
             children: <Widget>[
               CustomCenter(
-                padding: EdgeInsets.symmetric(vertical: size.height / 4),
+                padding: EdgeInsets.symmetric(vertical: size.height / 8),
                 child: Column(
                   children: <Widget>[
                     Text(
@@ -48,18 +52,21 @@ class _RegisterViewState extends State<RegisterView> {
                           vertical: mediumMargin, horizontal: mediumMargin),
                       child: Column(
                         children: [
-                          const CustomTextField(
+                          CustomTextField(
                             labelText: "Name",
+                            controller: textEditingControllerName,
                           ),
                           SizedBox(height: mediumMargin),
-                          const CustomTextField(
+                          CustomTextField(
                             labelText: "Password",
                             isPassword: true,
+                            controller: textEditingControllerPassword,
                           ),
                           SizedBox(height: mediumMargin),
-                          const CustomTextField(
+                          CustomTextField(
                             labelText: "Re-enter Password",
                             isPassword: true,
+                            controller: textEditingControllerRePassword,
                           ),
                           SizedBox(height: mediumMargin),
                           Row(
@@ -73,6 +80,7 @@ class _RegisterViewState extends State<RegisterView> {
                                     groupValue: _character,
                                     onChanged: (UserType? value) {
                                       setState(() {
+                                        needPhone = true;
                                         _character = value;
                                       });
                                     },
@@ -88,6 +96,7 @@ class _RegisterViewState extends State<RegisterView> {
                                     groupValue: _character,
                                     onChanged: (UserType? value) {
                                       setState(() {
+                                        needPhone = false;
                                         _character = value;
                                       });
                                     },
@@ -97,10 +106,11 @@ class _RegisterViewState extends State<RegisterView> {
                             ],
                           ),
                           SizedBox(height: mediumMargin),
-                          const CustomTextField(
+                          needPhone ? CustomTextField(
                             labelText: "Telephone number",
                             textInputType: TextInputType.phone,
-                          ),
+                            controller: textEditingControllerTelephone,
+                          ) : Container(),
                         ],
                       ),
                     ),
@@ -108,8 +118,36 @@ class _RegisterViewState extends State<RegisterView> {
                       padding: EdgeInsets.symmetric(
                           vertical: mediumMargin, horizontal: mediumMargin),
                       child: ProgressButton(
+                        child: Text(AppLocalizations.of(context)!
+                            .registerButton, style: GoogleFonts.montserrat(color: Colors.white),),
                         buttonState: buttonState,
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            buttonState = ButtonState.inProgress;
+                          });
+                          if (textEditingControllerPassword.text ==
+                              textEditingControllerRePassword.text && textEditingControllerPassword.text.isNotEmpty) {
+                            controller.createUser(Users(
+                                name: textEditingControllerName.text,
+                                password: textEditingControllerPassword.text,
+                                role: _character!.index,
+                                phoneNumber: _character == UserType.User
+                                    ? textEditingControllerTelephone.text
+                                    : null)).then((_) => {
+                                      setState(() {
+                                        buttonState = ButtonState.normal;
+                                      }),
+                            });
+                          } else {
+                            Future.delayed(const Duration(seconds: 1)).then((value) =>
+                            {
+                              setState(() {
+                                print("err");
+                                buttonState = ButtonState.error;
+                              })
+                            });
+                          }
+                        },
                       ),
                     )
                   ],

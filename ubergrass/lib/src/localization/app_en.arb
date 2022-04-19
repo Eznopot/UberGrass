@@ -7,6 +7,7 @@
   "homeDescription" : "Vous retrouverez ici vos command",
   "drawerTitle" : "All page",
   "registerTitle" : "Register",
+  "registerButton" : "register !",
   "registerTypeUser" : "Buyer",
   "registerTypeManager" : "Seller"
 }
