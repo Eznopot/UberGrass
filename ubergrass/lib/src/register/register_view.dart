@@ -27,7 +27,22 @@ class _RegisterViewState extends State<RegisterView> {
   TextEditingController textEditingControllerTelephone =
       TextEditingController();
   ButtonState buttonState = ButtonState.normal;
-  bool needPhone = true;
+
+  @override
+  void initState() {
+    controller.addListener(() {
+      setState(() {
+        if (controller.connected) {
+          print("suiiiite");
+          buttonState = ButtonState.normal;
+        } else {
+          print("error");
+          buttonState = ButtonState.error;
+        }
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,120 +56,73 @@ class _RegisterViewState extends State<RegisterView> {
                 padding: EdgeInsets.symmetric(vertical: size.height / 8),
                 child: Column(
                   children: <Widget>[
-                    Text(
-                      AppLocalizations.of(context)!.registerTitle,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
-                          fontSize: largeTextSize, fontWeight: FontWeight.bold),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: ListTile(
+                            title: Text(
+                                AppLocalizations.of(context)!.registerTypeUser),
+                            leading: Radio<UserType>(
+                              value: UserType.User,
+                              groupValue: _character,
+                              onChanged: (UserType? value) {
+                                setState(() {
+                                  _character = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: ListTile(
+                            title: Text(AppLocalizations.of(context)!
+                                .registerTypeManager),
+                            leading: Radio<UserType>(
+                              value: UserType.Manager,
+                              groupValue: _character,
+                              onChanged: (UserType? value) {
+                                setState(() {
+                                  _character = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+                    SizedBox(height: mediumMargin),
                     CustomCenter(
                       padding: EdgeInsets.symmetric(
                           vertical: mediumMargin, horizontal: mediumMargin),
-                      child: Column(
-                        children: [
-                          CustomTextField(
-                            labelText: "Name",
-                            controller: textEditingControllerName,
-                          ),
-                          SizedBox(height: mediumMargin),
-                          CustomTextField(
-                            labelText: "Password",
-                            isPassword: true,
-                            controller: textEditingControllerPassword,
-                          ),
-                          SizedBox(height: mediumMargin),
-                          CustomTextField(
-                            labelText: "Re-enter Password",
-                            isPassword: true,
-                            controller: textEditingControllerRePassword,
-                          ),
-                          SizedBox(height: mediumMargin),
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: ListTile(
-                                  title: Text(AppLocalizations.of(context)!
-                                      .registerTypeUser),
-                                  leading: Radio<UserType>(
-                                    value: UserType.User,
-                                    groupValue: _character,
-                                    onChanged: (UserType? value) {
-                                      setState(() {
-                                        needPhone = true;
-                                        _character = value;
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: ListTile(
-                                  title: Text(AppLocalizations.of(context)!
-                                      .registerTypeManager),
-                                  leading: Radio<UserType>(
-                                    value: UserType.Manager,
-                                    groupValue: _character,
-                                    onChanged: (UserType? value) {
-                                      setState(() {
-                                        needPhone = false;
-                                        _character = value;
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: mediumMargin),
-                          needPhone ? CustomTextField(
-                            labelText: "Telephone number",
-                            textInputType: TextInputType.phone,
-                            controller: textEditingControllerTelephone,
-                          ) : Container(),
-                        ],
+                      child: CustomTextField(
+                        labelText: "Telephone number",
+                        textInputType: TextInputType.phone,
+                        controller: textEditingControllerTelephone,
                       ),
                     ),
                     CustomCenter(
                       padding: EdgeInsets.symmetric(
                           vertical: mediumMargin, horizontal: mediumMargin),
                       child: ProgressButton(
-                        child: Text(AppLocalizations.of(context)!
-                            .registerButton, style: GoogleFonts.montserrat(color: Colors.white),),
+                        child: Text(
+                          AppLocalizations.of(context)!.registerButton,
+                          style: GoogleFonts.montserrat(color: Colors.white),
+                        ),
                         buttonState: buttonState,
                         onPressed: () {
                           setState(() {
                             buttonState = ButtonState.inProgress;
                           });
-                          if (textEditingControllerPassword.text ==
-                              textEditingControllerRePassword.text && textEditingControllerPassword.text.isNotEmpty) {
-                            controller.createUser(Users(
-                                name: textEditingControllerName.text,
-                                password: textEditingControllerPassword.text,
-                                role: _character!.index,
-                                phoneNumber: _character == UserType.User
-                                    ? textEditingControllerTelephone.text
-                                    : null)).then((_) => {
-                                      setState(() {
-                                        buttonState = ButtonState.normal;
-                                      }),
-                            });
-                          } else {
-                            Future.delayed(const Duration(seconds: 1)).then((value) =>
-                            {
-                              setState(() {
-                                print("err");
-                                buttonState = ButtonState.error;
-                              })
-                            });
-                          }
+                          controller.createUser(
+                              textEditingControllerTelephone.text, context);
                         },
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
             ],
-          ), // This trailing comma makes auto-formatting nicer for build methods.
+          ),
         ),
       ),
     );

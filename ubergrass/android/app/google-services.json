@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "884039774251-t43s2ob2ue8ccerjlvpnjn3ra4bac5kd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.salemcorp",
+            "certificate_hash": "6b2a4dc08aaa59af3d614b30cc386316b13a4db9"
+          }
+        },
+        {
           "client_id": "884039774251-iovlji3vvac6nft3n1v23qe8ltpl13jf.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -42,6 +50,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "884039774251-cajtopghm9kv955ftrkuc4fgsbsdsilv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.salemcorp.ubergrass",
+            "certificate_hash": "6b2a4dc08aaa59af3d614b30cc386316b13a4db9"
+          }
+        },
         {
           "client_id": "884039774251-iovlji3vvac6nft3n1v23qe8ltpl13jf.apps.googleusercontent.com",
           "client_type": 3

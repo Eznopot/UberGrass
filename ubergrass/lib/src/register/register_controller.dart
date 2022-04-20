@@ -6,8 +6,14 @@ import '../model/users.dart';
 class RegisterController with ChangeNotifier {
   RegisterService service = RegisterService();
 
-  Future<int> createUser(Users user) async {
-    await service.createUser(user);
-    return 0;
+  bool _connected = false;
+  bool get connected => _connected;
+
+  Future<void> createUser(String phoneNumber, BuildContext context) async {
+    await service.createUser(phoneNumber, context);
+    service.addListener(() {
+      _connected = service.connected;
+      notifyListeners();
+    });
   }
 }
