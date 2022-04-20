@@ -9,5 +9,10 @@
   "registerTitle" : "Register",
   "registerButton" : "register !",
   "registerTypeUser" : "Buyer",
-  "registerTypeManager" : "Seller"
+  "registerTypeManager" : "Seller",
+
+  "completeTitle" : "Complete your information",
+  "nameInputTextLabel" : "Name",
+  "emailInputTextLabel" : "Email",
+  "completeButton" : "Complete"
 }

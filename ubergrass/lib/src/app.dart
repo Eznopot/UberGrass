@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ubergrass/src/register/register_view.dart';
 
+import 'complete_information/complete_information_view.dart';
 import 'home/home_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(),
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
+          initialRoute: "/complete_info",
           onGenerateRoute: (RouteSettings routeSettings) {
             return MaterialPageRoute<void>(
               settings: routeSettings,
@@ -45,6 +47,8 @@ class MyApp extends StatelessWidget {
                     return SettingsView(controller: settingsController);
                   case HomeView.routeName:
                     return const HomeView();
+                  case CompleteInformationView.routeName:
+                    return const CompleteInformationView();
                   default:
                     return const RegisterView();
                 }

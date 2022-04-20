@@ -20,10 +20,6 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   UserType? _character = UserType.User;
   RegisterController controller = RegisterController();
-  TextEditingController textEditingControllerName = TextEditingController();
-  TextEditingController textEditingControllerPassword = TextEditingController();
-  TextEditingController textEditingControllerRePassword =
-      TextEditingController();
   TextEditingController textEditingControllerTelephone =
       TextEditingController();
   ButtonState buttonState = ButtonState.normal;
@@ -56,41 +52,6 @@ class _RegisterViewState extends State<RegisterView> {
                 padding: EdgeInsets.symmetric(vertical: size.height / 8),
                 child: Column(
                   children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: ListTile(
-                            title: Text(
-                                AppLocalizations.of(context)!.registerTypeUser),
-                            leading: Radio<UserType>(
-                              value: UserType.User,
-                              groupValue: _character,
-                              onChanged: (UserType? value) {
-                                setState(() {
-                                  _character = value;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: ListTile(
-                            title: Text(AppLocalizations.of(context)!
-                                .registerTypeManager),
-                            leading: Radio<UserType>(
-                              value: UserType.Manager,
-                              groupValue: _character,
-                              onChanged: (UserType? value) {
-                                setState(() {
-                                  _character = value;
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: mediumMargin),
                     CustomCenter(
                       padding: EdgeInsets.symmetric(
                           vertical: mediumMargin, horizontal: mediumMargin),
