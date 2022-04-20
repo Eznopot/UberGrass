@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ubergrass/src/model/users.dart';
 import 'package:ubergrass/src/register/register_controller.dart';
 import 'package:ubergrass/src/widget/widget/button/progress_button.dart';
 import 'package:ubergrass/src/widget/widget/textfield/custom_text_field.dart';
 import '../constant/size.dart';
 import '../widget/widget/placement/custom_center.dart';
+import 'complete_information_controller.dart';
 
 enum UserType { User, Manager }
 
@@ -19,24 +19,13 @@ class CompleteInformationView extends StatefulWidget {
 
 class _CompleteInformationViewState extends State<CompleteInformationView> {
   UserType? _character = UserType.User;
-  RegisterController controller = RegisterController();
+  CompleteInformationController controller = CompleteInformationController();
   TextEditingController textEditingControllerName = TextEditingController();
   TextEditingController textEditingControllerEmail = TextEditingController();
   ButtonState buttonState = ButtonState.normal;
 
   @override
   void initState() {
-    controller.addListener(() {
-      setState(() {
-        if (controller.connected) {
-          print("suiiiite");
-          buttonState = ButtonState.normal;
-        } else {
-          print("error");
-          buttonState = ButtonState.error;
-        }
-      });
-    });
     super.initState();
   }
 

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:ubergrass/src/model/user_data.dart';
 
 import '../firebase/firebase.dart';
 
@@ -63,6 +64,9 @@ class RegisterService with ChangeNotifier {
           timeout: const Duration(minutes: 2),
           verificationCompleted: (credential) {
             _auth.signInWithCredential(credential).then((value) {
+              print("test");
+              UserData user = UserData();
+              user.setUserData(value);
               _connected = true;
               notifyListeners();
             }).onError((error, stackTrace) {

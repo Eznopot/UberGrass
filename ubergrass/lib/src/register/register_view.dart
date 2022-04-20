@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ubergrass/src/model/users.dart';
+import 'package:ubergrass/src/model/user_data.dart';
 import 'package:ubergrass/src/register/register_controller.dart';
 import 'package:ubergrass/src/widget/widget/button/progress_button.dart';
 import 'package:ubergrass/src/widget/widget/textfield/custom_text_field.dart';
+import '../complete_information/complete_information_view.dart';
 import '../constant/size.dart';
 import '../widget/widget/placement/custom_center.dart';
 
@@ -18,7 +19,6 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  UserType? _character = UserType.User;
   RegisterController controller = RegisterController();
   TextEditingController textEditingControllerTelephone =
       TextEditingController();
@@ -29,10 +29,9 @@ class _RegisterViewState extends State<RegisterView> {
     controller.addListener(() {
       setState(() {
         if (controller.connected) {
-          print("suiiiite");
           buttonState = ButtonState.normal;
+          Navigator.popAndPushNamed(context, CompleteInformationView.routeName);
         } else {
-          print("error");
           buttonState = ButtonState.error;
         }
       });

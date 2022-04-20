@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:ubergrass/src/register/register_service.dart';
 
-import '../model/users.dart';
+import '../model/user_data.dart';
 
 class RegisterController with ChangeNotifier {
   RegisterService service = RegisterService();
