@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:ubergrass/src/register/register_view.dart';
-
-import 'complete_information/complete_information_view.dart';
-import 'home/home_view.dart';
-import 'settings/settings_controller.dart';
-import 'settings/settings_view.dart';
-
+import 'package:ubergrass/src/page/complete_information/complete_information_view.dart';
+import 'package:ubergrass/src/page/home/home_view.dart';
+import 'package:ubergrass/src/page/register/register_view.dart';
+import 'package:ubergrass/src/page/settings/settings_controller.dart';
+import 'package:ubergrass/src/page/settings/settings_view.dart';
 class MyApp extends StatelessWidget {
   const MyApp({
     Key? key,
