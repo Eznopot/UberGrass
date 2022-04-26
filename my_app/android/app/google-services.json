@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "609814313608",
+    "firebase_url": "https://yomy-cfc3f-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "yomy-cfc3f",
+    "storage_bucket": "yomy-cfc3f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:609814313608:android:3c63a4220c417c2d1d7d3d",
+        "android_client_info": {
+          "package_name": "fr.fittinghome.fittinghomescannerpro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "609814313608-i79upl5v95vmq24ss5ptg0gvhio3khil.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDugkYm23l5bf2fUVqzssp86ngZW5mkOEI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "609814313608-i79upl5v95vmq24ss5ptg0gvhio3khil.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "609814313608-u296crau3ju5qk68r2nn6m4qqd22il3k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mvpApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:609814313608:android:c8b1b64ca23a4f1c1d7d3d",
+        "android_client_info": {
+          "package_name": "fr.fittinghome.fittinghomescannerpro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "609814313608-i79upl5v95vmq24ss5ptg0gvhio3khil.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDugkYm23l5bf2fUVqzssp86ngZW5mkOEI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "609814313608-i79upl5v95vmq24ss5ptg0gvhio3khil.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "609814313608-u296crau3ju5qk68r2nn6m4qqd22il3k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "fr.fittinghome.fittinghomescannerpro"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
