@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ubergrass/src/model/user_data.dart';
-import 'package:ubergrass/src/register/register_controller.dart';
+import 'package:ubergrass/src/page/register/register_controller.dart';
 import 'package:ubergrass/src/widget/widget/button/progress_button.dart';
 import 'package:ubergrass/src/widget/widget/textfield/custom_text_field.dart';
 import '../complete_information/complete_information_view.dart';
-import '../constant/size.dart';
-import '../widget/widget/placement/custom_center.dart';
+import '../../constant/size.dart';
+import '../../widget/widget/placement/custom_center.dart';
 
 enum UserType { User, Manager }
 

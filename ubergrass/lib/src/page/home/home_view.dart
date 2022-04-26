@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../constant/size.dart';
-import '../widget/widget/drawer.dart';
-import '../widget/widget/placement/custom_center.dart';
+import '../../constant/size.dart';
+import '../../widget/widget/drawer.dart';
+import '../../widget/widget/placement/custom_center.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);

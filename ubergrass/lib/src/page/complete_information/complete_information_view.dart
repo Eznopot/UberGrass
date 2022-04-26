@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ubergrass/src/widget/widget/button/progress_button.dart';
 import 'package:ubergrass/src/widget/widget/textfield/custom_text_field.dart';
-import '../constant/size.dart';
-import '../widget/widget/placement/custom_center.dart';
+import '../../constant/size.dart';
+import '../../widget/widget/placement/custom_center.dart';
 import 'complete_information_controller.dart';
 
 enum UserType { User, Manager }
