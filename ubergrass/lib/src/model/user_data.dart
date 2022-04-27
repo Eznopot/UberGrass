@@ -10,6 +10,8 @@ class UserData {
   UserData._internal();
 
   factory UserData() => _instance ??= UserData._internal();
+  get userData => _userData;
+
 
   void addUserToGroup() async {
     FirebaseFunctions function = FirebasePackage.getFunction();

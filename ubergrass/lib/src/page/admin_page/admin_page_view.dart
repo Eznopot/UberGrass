@@ -1,46 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ubergrass/src/model/user_data.dart';
-import 'package:ubergrass/src/page/admin_page/admin_page_service.dart';
-import 'package:ubergrass/src/page/register/register_controller.dart';
 import 'package:ubergrass/src/widget/widget/button/progress_button.dart';
 import 'package:ubergrass/src/widget/widget/textfield/custom_text_field.dart';
 import '../../widget/widget/dialog/exit_will_pop.dart';
-import '../admin_page/admin_page_view.dart';
 import '../complete_information/complete_information_view.dart';
 import '../../constant/size.dart';
 import '../../widget/widget/placement/custom_center.dart';
+import 'admin_page_controller.dart';
 
-enum UserType { User, Manager }
-
-class RegisterView extends StatefulWidget {
-  const RegisterView({Key? key}) : super(key: key);
-  static const String routeName = "/register";
+class AdminPageView extends StatefulWidget {
+  const AdminPageView({Key? key}) : super(key: key);
+  static const String routeName = "/admin_page";
   @override
-  State<RegisterView> createState() => _RegisterViewState();
+  State<AdminPageView> createState() => _AdminPageViewState();
 }
 
-class _RegisterViewState extends State<RegisterView> {
-  RegisterController controller = RegisterController();
-  TextEditingController textEditingControllerTelephone =
+class _AdminPageViewState extends State<AdminPageView> {
+  AdminPageController controller = AdminPageController();
+  TextEditingController textEditingControllerFunctionName =
       TextEditingController();
+  String result = "";
   ButtonState buttonState = ButtonState.normal;
 
   @override
   void initState() {
-    controller.addListener(() {
-      setState(() {
-        if (controller.connected) {
-          buttonState = ButtonState.normal;
-        } else {
-          buttonState = ButtonState.error;
-        }
-      });
-      if (controller.connected) {
-        Navigator.popAndPushNamed(context, AdminPageView.routeName);
-      }
-    });
     super.initState();
   }
 
@@ -61,9 +45,8 @@ class _RegisterViewState extends State<RegisterView> {
                         padding: EdgeInsets.symmetric(
                             vertical: mediumMargin, horizontal: mediumMargin),
                         child: CustomTextField(
-                          labelText: "Telephone number",
-                          textInputType: TextInputType.phone,
-                          controller: textEditingControllerTelephone,
+                          labelText: "enterFunctionName",
+                          controller: textEditingControllerFunctionName,
                         ),
                       ),
                       CustomCenter(
@@ -71,7 +54,7 @@ class _RegisterViewState extends State<RegisterView> {
                             vertical: mediumMargin, horizontal: mediumMargin),
                         child: ProgressButton(
                           child: Text(
-                            AppLocalizations.of(context)!.registerButton,
+                            "Call function",
                             style: GoogleFonts.montserrat(color: Colors.white),
                           ),
                           buttonState: buttonState,
@@ -79,9 +62,23 @@ class _RegisterViewState extends State<RegisterView> {
                             setState(() {
                               buttonState = ButtonState.inProgress;
                             });
-                            controller.createUser(
-                                textEditingControllerTelephone.text, context);
+                            controller
+                                .callCloudFunction(
+                                    textEditingControllerFunctionName.text)
+                                .then((value) => {
+                                      setState(() {
+                                        result = value;
+                                      })
+                                    });
                           },
+                        ),
+                      ),
+                      CustomCenter(
+                        padding: EdgeInsets.symmetric(
+                            vertical: mediumMargin, horizontal: mediumMargin),
+                        child: Text(
+                          result,
+                          style: GoogleFonts.montserrat(color: Colors.white),
                         ),
                       ),
                     ],

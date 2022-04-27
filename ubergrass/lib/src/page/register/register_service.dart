@@ -21,7 +21,7 @@ class RegisterService with ChangeNotifier {
           actions: [
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(smsCode);
               },
               child: const Text('Sign in'),
             ),
@@ -46,6 +46,7 @@ class RegisterService with ChangeNotifier {
         );
       },
     );
+    return smsCode;
   }
 
   Future<void> createUser(String phoneNumber, BuildContext context) async {
@@ -79,6 +80,7 @@ class RegisterService with ChangeNotifier {
           },
           codeSent: (String verificationId, int? resendToken) async {
             final smsCode = await getSmsCodeFromUser(context);
+            print(smsCode);
             if (smsCode != null) {
               final credential = PhoneAuthProvider.credential(
                 verificationId: verificationId,
@@ -86,6 +88,8 @@ class RegisterService with ChangeNotifier {
               );
               try {
                 _auth.signInWithCredential(credential).then((value) {
+                  UserData user = UserData();
+                  user.setUserData(value);
                   _connected = true;
                   notifyListeners();
                 }).onError((error, stackTrace) {
@@ -98,6 +102,7 @@ class RegisterService with ChangeNotifier {
             }
           },
           codeAutoRetrievalTimeout: (e) {
+            notifyListeners();
             print(e);
           },
         );
