@@ -7,43 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:884039774251:android:a48fea1cdb2710796f3a6e",
-        "android_client_info": {
-          "package_name": "com.salemcorp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "884039774251-t43s2ob2ue8ccerjlvpnjn3ra4bac5kd.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.salemcorp",
-            "certificate_hash": "6b2a4dc08aaa59af3d614b30cc386316b13a4db9"
-          }
-        },
-        {
-          "client_id": "884039774251-iovlji3vvac6nft3n1v23qe8ltpl13jf.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAmppdu0c4srz_8JHuW5A0C7b9k00iDGAM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "884039774251-iovlji3vvac6nft3n1v23qe8ltpl13jf.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:884039774251:android:19dda021ea9ca2d76f3a6e",
         "android_client_info": {
           "package_name": "com.salemcorp.ubergrass"
@@ -51,7 +14,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "884039774251-cajtopghm9kv955ftrkuc4fgsbsdsilv.apps.googleusercontent.com",
+          "client_id": "884039774251-k6fmifoihuc0js7bidp202vhdgvib43h.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.salemcorp.ubergrass",
