@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ubergrass/src/model/user_data.dart';
-import 'package:ubergrass/src/page/admin_page/admin_page_service.dart';
 import 'package:ubergrass/src/page/register/register_controller.dart';
 import 'package:ubergrass/src/widget/widget/button/progress_button.dart';
 import 'package:ubergrass/src/widget/widget/textfield/custom_text_field.dart';
 import '../../widget/widget/dialog/exit_will_pop.dart';
 import '../admin_page/admin_page_view.dart';
-import '../complete_information/complete_information_view.dart';
 import '../../constant/size.dart';
 import '../../widget/widget/placement/custom_center.dart';
+import '../complete_information/complete_information_view.dart';
 
 enum UserType { User, Manager }
 
@@ -32,6 +30,7 @@ class _RegisterViewState extends State<RegisterView> {
     controller.addListener(() {
       if (controller.connected) {
         Navigator.popAndPushNamed(context, AdminPageView.routeName);
+        dispose;
       } else {
         setState(() {
           buttonState = ButtonState.error;

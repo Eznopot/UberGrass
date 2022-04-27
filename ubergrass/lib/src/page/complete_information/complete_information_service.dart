@@ -6,4 +6,8 @@ class CompleteInformationService {
     UserData userData = UserData();
     userData.addUserToGroup();
   }
+
+  Future<List<String>?> getCity() async {
+    return await getCity();
+  }
 }

@@ -20,6 +20,8 @@ class CompleteInformationView extends StatefulWidget {
 
 class _CompleteInformationViewState extends State<CompleteInformationView> {
   UserType? _character = UserType.User;
+  String dropdownValue = 'City';
+  List<String> city = [];
   CompleteInformationController controller = CompleteInformationController();
   TextEditingController textEditingControllerName = TextEditingController();
   TextEditingController textEditingControllerEmail = TextEditingController();
@@ -27,6 +29,13 @@ class _CompleteInformationViewState extends State<CompleteInformationView> {
 
   @override
   void initState() {
+    controller.getCity().then((value) {
+      if (value != null) {
+        setState(() {
+          city = value;
+        });
+      }
+    });
     super.initState();
   }
 
@@ -71,6 +80,21 @@ class _CompleteInformationViewState extends State<CompleteInformationView> {
                               AppLocalizations.of(context)!.emailInputTextLabel,
                           controller: textEditingControllerEmail,
                         ),
+                      ),
+                      DropdownButton<String>(
+                        value: dropdownValue,
+                        items: city
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownValue = newValue!;
+                          });
+                        },
                       ),
                       Row(
                         children: <Widget>[

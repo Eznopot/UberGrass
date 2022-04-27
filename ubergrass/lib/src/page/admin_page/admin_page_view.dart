@@ -35,56 +35,52 @@ class _AdminPageViewState extends State<AdminPageView> {
       child: Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(
-            child: Stack(
-              children: <Widget>[
-                CustomCenter(
-                  padding: EdgeInsets.symmetric(vertical: size.height / 8),
-                  child: Column(
-                    children: <Widget>[
-                      CustomCenter(
-                        padding: EdgeInsets.symmetric(
-                            vertical: mediumMargin, horizontal: mediumMargin),
-                        child: CustomTextField(
-                          labelText: "enterFunctionName",
-                          controller: textEditingControllerFunctionName,
-                        ),
-                      ),
-                      CustomCenter(
-                        padding: EdgeInsets.symmetric(
-                            vertical: mediumMargin, horizontal: mediumMargin),
-                        child: ProgressButton(
-                          child: Text(
-                            "Call function",
-                            style: GoogleFonts.montserrat(color: Colors.white),
-                          ),
-                          buttonState: buttonState,
-                          onPressed: () {
-                            setState(() {
-                              buttonState = ButtonState.inProgress;
-                            });
-                            controller
-                                .callCloudFunction(
-                                    textEditingControllerFunctionName.text)
-                                .then((value) => {
-                                      setState(() {
-                                        result = value;
-                                      })
-                                    });
-                          },
-                        ),
-                      ),
-                      CustomCenter(
-                        padding: EdgeInsets.symmetric(
-                            vertical: mediumMargin, horizontal: mediumMargin),
-                        child: Text(
-                          result,
-                          style: GoogleFonts.montserrat(color: Colors.white),
-                        ),
-                      ),
-                    ],
+            child: CustomCenter(
+              padding: EdgeInsets.symmetric(vertical: size.height / 8),
+              child: Column(
+                children: <Widget>[
+                  CustomCenter(
+                    padding: EdgeInsets.symmetric(
+                        vertical: mediumMargin, horizontal: mediumMargin),
+                    child: CustomTextField(
+                      labelText: "enterFunctionName",
+                      controller: textEditingControllerFunctionName,
+                    ),
                   ),
-                ),
-              ],
+                  CustomCenter(
+                    padding: EdgeInsets.symmetric(
+                        vertical: mediumMargin, horizontal: mediumMargin),
+                    child: ProgressButton(
+                      child: Text(
+                        "Call function",
+                        style: GoogleFonts.montserrat(color: Colors.white),
+                      ),
+                      buttonState: buttonState,
+                      onPressed: () {
+                        setState(() {
+                          buttonState = ButtonState.inProgress;
+                        });
+                        controller
+                            .callCloudFunction(
+                                textEditingControllerFunctionName.text)
+                            .then((value) => {
+                                  setState(() {
+                                    result = value;
+                                  })
+                                });
+                      },
+                    ),
+                  ),
+                  CustomCenter(
+                    padding: EdgeInsets.symmetric(
+                        vertical: mediumMargin, horizontal: mediumMargin),
+                    child: Text(
+                      result,
+                      style: GoogleFonts.montserrat(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
