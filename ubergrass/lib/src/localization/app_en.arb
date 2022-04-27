@@ -14,5 +14,7 @@
   "completeTitle" : "Complete your information",
   "nameInputTextLabel" : "Name",
   "emailInputTextLabel" : "Email",
-  "completeButton" : "Complete"
+  "completeButton" : "Complete",
+
+  "listCommandTitle" : "Command"
 }

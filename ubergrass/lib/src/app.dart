@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:ubergrass/src/page/command_list/command_list_view.dart';
 import 'package:ubergrass/src/page/complete_information/complete_information_view.dart';
 import 'package:ubergrass/src/page/home/home_view.dart';
 import 'package:ubergrass/src/page/register/register_view.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(),
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
-          initialRoute: "/register",
+          initialRoute: "/list_command",
           onGenerateRoute: (RouteSettings routeSettings) {
             return MaterialPageRoute<void>(
               settings: routeSettings,
@@ -47,6 +48,8 @@ class MyApp extends StatelessWidget {
                     return const HomeView();
                   case CompleteInformationView.routeName:
                     return const CompleteInformationView();
+                  case CommandListView.routeName:
+                    return const CommandListView();
                   default:
                     return const RegisterView();
                 }
