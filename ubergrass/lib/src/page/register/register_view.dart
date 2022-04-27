@@ -30,15 +30,12 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   void initState() {
     controller.addListener(() {
-      setState(() {
-        if (controller.connected) {
-          buttonState = ButtonState.normal;
-        } else {
-          buttonState = ButtonState.error;
-        }
-      });
       if (controller.connected) {
         Navigator.popAndPushNamed(context, AdminPageView.routeName);
+      } else {
+        setState(() {
+          buttonState = ButtonState.error;
+        });
       }
     });
     super.initState();
