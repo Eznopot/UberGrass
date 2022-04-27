@@ -7,6 +7,11 @@ class RegisterController with ChangeNotifier {
   bool _connected = false;
   bool get connected => _connected;
 
+
+  Future<bool> userCompleted() async {
+    return await service.userCompleted();
+  }
+
   Future<void> createUser(String phoneNumber, BuildContext context) async {
     await service.createUser(phoneNumber, context);
     service.addListener(() {

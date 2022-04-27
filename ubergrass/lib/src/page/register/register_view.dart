@@ -9,6 +9,7 @@ import '../admin_page/admin_page_view.dart';
 import '../../constant/size.dart';
 import '../../widget/widget/placement/custom_center.dart';
 import '../complete_information/complete_information_view.dart';
+import '../home/home_view.dart';
 
 enum UserType { User, Manager }
 
@@ -29,8 +30,13 @@ class _RegisterViewState extends State<RegisterView> {
   void initState() {
     controller.addListener(() {
       if (controller.connected) {
-        Navigator.popAndPushNamed(context, AdminPageView.routeName);
-        dispose;
+        controller.userCompleted().then((value) {
+          if (value) {
+            Navigator.popAndPushNamed(context, HomeView.routeName);
+          } else {
+            Navigator.popAndPushNamed(context, CompleteInformationView.routeName);
+          }
+        });
       } else {
         setState(() {
           buttonState = ButtonState.error;

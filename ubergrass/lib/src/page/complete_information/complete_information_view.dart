@@ -6,9 +6,8 @@ import 'package:ubergrass/src/widget/widget/textfield/custom_text_field.dart';
 import '../../constant/size.dart';
 import '../../widget/widget/dialog/exit_will_pop.dart';
 import '../../widget/widget/placement/custom_center.dart';
+import '../home/home_view.dart';
 import 'complete_information_controller.dart';
-
-enum UserType { User, Manager }
 
 class CompleteInformationView extends StatefulWidget {
   const CompleteInformationView({Key? key}) : super(key: key);
@@ -19,9 +18,10 @@ class CompleteInformationView extends StatefulWidget {
 }
 
 class _CompleteInformationViewState extends State<CompleteInformationView> {
-  UserType? _character = UserType.User;
   String dropdownValue = 'City';
+  int roleSelected = 0;
   List<String> city = [];
+  List<String> role = [];
   CompleteInformationController controller = CompleteInformationController();
   TextEditingController textEditingControllerName = TextEditingController();
   TextEditingController textEditingControllerEmail = TextEditingController();
@@ -29,10 +29,18 @@ class _CompleteInformationViewState extends State<CompleteInformationView> {
 
   @override
   void initState() {
-    controller.getCity().then((value) {
+    controller.getCities().then((value) {
       if (value != null) {
         setState(() {
+          dropdownValue = value[0];
           city = value;
+        });
+      }
+    });
+    controller.getRoles().then((value) {
+      if (value != null) {
+        setState(() {
+          role = value;
         });
       }
     });
@@ -81,54 +89,61 @@ class _CompleteInformationViewState extends State<CompleteInformationView> {
                           controller: textEditingControllerEmail,
                         ),
                       ),
-                      DropdownButton<String>(
-                        value: dropdownValue,
-                        items: city
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownValue = newValue!;
-                          });
-                        },
-                      ),
+                      Row(children: <Widget>[
+                        Expanded(
+                          flex: 1,
+                          child: Center(
+                            child: Text(
+                                AppLocalizations.of(context)!.completeCity,
+                                style: GoogleFonts.montserrat()),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: Center(
+                            child: DropdownButton<String>(
+                              value: dropdownValue,
+                              items: city.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  dropdownValue = newValue!;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ]),
                       Row(
-                        children: <Widget>[
-                          Expanded(
+                        children:
+                            List<Widget>.generate(role.length, (int index) {
+                          return Expanded(
                             child: ListTile(
-                              title: Text(AppLocalizations.of(context)!
-                                  .registerTypeUser),
-                              leading: Radio<UserType>(
-                                value: UserType.User,
-                                groupValue: _character,
-                                onChanged: (UserType? value) {
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(
+                                role[index],
+                                style: GoogleFonts.montserrat(
+                                    fontSize: mediumTextSize),
+                              ),
+                              leading: Radio<int>(
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                value: index,
+                                groupValue: roleSelected,
+                                onChanged: (int? value) {
                                   setState(() {
-                                    _character = value;
+                                    roleSelected = value!;
                                   });
                                 },
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: ListTile(
-                              title: Text(AppLocalizations.of(context)!
-                                  .registerTypeManager),
-                              leading: Radio<UserType>(
-                                value: UserType.Manager,
-                                groupValue: _character,
-                                onChanged: (UserType? value) {
-                                  setState(() {
-                                    _character = value;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
+                          );
+                        }),
                       ),
                       SizedBox(height: mediumMargin),
                       CustomCenter(
@@ -141,7 +156,23 @@ class _CompleteInformationViewState extends State<CompleteInformationView> {
                           ),
                           buttonState: buttonState,
                           onPressed: () {
-                            controller.updateInformations("email", "Name");
+                            if (textEditingControllerEmail.text.isNotEmpty && textEditingControllerName.text.isNotEmpty) {
+                              setState(() {
+                                buttonState = ButtonState.inProgress;
+                              });
+                              controller.updateInformations(textEditingControllerEmail.text, textEditingControllerName.text, role[roleSelected], dropdownValue).then((value) {
+                                if (value == 0) {
+                                  setState(() {
+                                    buttonState = ButtonState.normal;
+                                  });
+                                  Navigator.popAndPushNamed(context, HomeView.routeName);
+                                } else {
+                                  setState(() {
+                                    buttonState = ButtonState.error;
+                                  });
+                                }
+                              });
+                            }
                           },
                         ),
                       ),

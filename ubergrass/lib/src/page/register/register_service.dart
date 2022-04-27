@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,13 @@ class RegisterService with ChangeNotifier {
   bool _connected = false;
   bool get connected => _connected;
 
+  Future<bool> userCompleted() async {
+    FirebaseFunctions function = FirebasePackage.getFunction();
+    var httpsCallable = function.httpsCallable("getMe");
+    final response = await httpsCallable();
+    print(response.data);
+    return response.data["Status"] == "Complete";
+  }
 
   Future<String?> getSmsCodeFromUser(context) async {
     String? smsCode;
@@ -86,7 +94,6 @@ class RegisterService with ChangeNotifier {
           },
           codeSent: (String verificationId, int? resendToken) async {
             final smsCode = await getSmsCodeFromUser(context);
-            print(smsCode);
             if (smsCode != null) {
               final credential = PhoneAuthProvider.credential(
                 verificationId: verificationId,

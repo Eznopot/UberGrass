@@ -8,15 +8,15 @@
   "drawerTitle" : "All page",
   "registerTitle" : "Register",
   "registerButton" : "register !",
-  "registerTypeUser" : "Buyer",
-  "registerTypeManager" : "Seller",
 
   "completeTitle" : "Complete your information",
+  "completeCity" : "City:",
+  "completeRole" : "Role:",
   "nameInputTextLabel" : "Name",
   "emailInputTextLabel" : "Email",
   "completeButton" : "Complete",
 
-  "listCommandTitle" : "Command",
+  "listCommandTitle" : "order",
 
   "listArticleTitle" : "Article"
 }

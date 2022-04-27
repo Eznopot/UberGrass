@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_functions/cloud_functions.dart';
 
 import '../../firebase/firebase.dart';
@@ -6,16 +8,17 @@ import 'complete_information_service.dart';
 class CompleteInformationController {
   CompleteInformationService service = CompleteInformationService();
 
-  void updateInformations(String email, String Name) {
-    service.updateInformations(email, Name);
+  Future<int> updateInformations(String email, String name, String role, String city) async {
+    return await service.completeUserInformations(email, name, role, city);
+
   }
 
-  Future<List<String>?> getCity() async {
-    FirebaseFunctions function = FirebasePackage.getFunction();
-    var httpsCallable = function.httpsCallable("getCity");
-    var res = await httpsCallable.call();
-    print(res.data);
-    return res.data;
+  Future<List<String>?> getCities() async {
+    return await service.getCities();
+  }
+
+  Future<List<String>?> getRoles() async {
+    return await service.getRoles();
   }
 
 }
