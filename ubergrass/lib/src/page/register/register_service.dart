@@ -57,7 +57,14 @@ class RegisterService with ChangeNotifier {
         await _auth.signInWithPhoneNumber(phoneNumber);
         final smsCode = await getSmsCodeFromUser(context);
         if (smsCode != null) {
-          await confirmationResult.confirm(smsCode);
+          confirmationResult.confirm(smsCode).then((value) {
+            UserData user = UserData();
+            user.setUserData(value);
+            _connected = true;
+            notifyListeners();
+          }).onError((error, stackTrace) {
+            notifyListeners();
+          });
         }
       } else {
         await _auth.verifyPhoneNumber(
@@ -65,7 +72,6 @@ class RegisterService with ChangeNotifier {
           timeout: const Duration(minutes: 2),
           verificationCompleted: (credential) {
             _auth.signInWithCredential(credential).then((value) {
-              print("test");
               UserData user = UserData();
               user.setUserData(value);
               _connected = true;
