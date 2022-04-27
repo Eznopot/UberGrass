@@ -20,7 +20,8 @@ class ListElement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (list["titles"] == null) {
+    print(position);
+    if (list["titles"] == null || list["titles"]!.isEmpty) {
       return Container();
     }
     return Card(

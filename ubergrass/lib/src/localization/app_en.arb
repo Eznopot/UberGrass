@@ -16,5 +16,7 @@
   "emailInputTextLabel" : "Email",
   "completeButton" : "Complete",
 
-  "listCommandTitle" : "Command"
+  "listCommandTitle" : "Command",
+
+  "listArticleTitle" : "Article"
 }

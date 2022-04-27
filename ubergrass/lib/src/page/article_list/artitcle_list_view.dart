@@ -5,16 +5,18 @@ import 'package:ubergrass/src/constant/size.dart';
 import 'package:ubergrass/src/widget/widget/placement/custom_center.dart';
 
 import '../../widget/widget/dialog/exit_will_pop.dart';
+import '../../widget/widget/dialog/loading_dialog.dart';
 import '../../widget/widget/list/list_builder.dart';
+import '../../widget/widget/list/list_element.dart';
 
-class CommandListView extends StatefulWidget {
-  const CommandListView({Key? key}) : super(key: key);
+class ArticleListView extends StatefulWidget {
+  const ArticleListView({Key? key}) : super(key: key);
   static const String routeName = "/list_command";
   @override
-  State<CommandListView> createState() => _CommandListViewState();
+  State<ArticleListView> createState() => _ArticleListViewState();
 }
 
-class _CommandListViewState extends State<CommandListView> {
+class _ArticleListViewState extends State<ArticleListView> {
   bool isInserted = true;
   final ScrollController scrollController = ScrollController();
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
@@ -22,7 +24,7 @@ class _CommandListViewState extends State<CommandListView> {
     "titles": ["test", "frsfsfes", "fesfesfes"],
   };
 
-  insertCommand(int index) {
+  insertArticle(int index) {
     if (list["titles"] == null) return;
     for (var i = index; i < list["titles"]!.length; i++) {
       listKey.currentState
@@ -31,14 +33,13 @@ class _CommandListViewState extends State<CommandListView> {
     isInserted = true;
   }
 
-  removeCommand(int index) {
+  removeArticle(int index) {
     listKey.currentState?.removeItem(
-        index, (_, animation) => ListBuilder(position: index, animation: animation, list: list, scrollController: scrollController, onDelete: () => removeCommand(index)),
+        index, (_, animation) => ListBuilder(position: index, animation: animation, list: list, scrollController: scrollController, onDelete: () => removeArticle(index)),
         duration: const Duration(milliseconds: 200));
-    list["titles"]!.removeAt(index);
   }
 
-  loadCommand() {
+  loadArticle() {
     if (list["titles"] == null) return;
     for (var i = 0; i < list["titles"]!.length; i++) {
       listKey.currentState
@@ -48,7 +49,7 @@ class _CommandListViewState extends State<CommandListView> {
 
   @override
   void initState() {
-    super.initState();
+    loadArticle();
     scrollController.addListener(() {
       /*double maxScroll = scrollController.position.maxScrollExtent;
       double currentScroll = scrollController.position.pixels;
@@ -62,6 +63,7 @@ class _CommandListViewState extends State<CommandListView> {
         isInserted = false;
       }*/
     });
+    super.initState();
   }
 
   @override
@@ -79,7 +81,7 @@ class _CommandListViewState extends State<CommandListView> {
                     padding: EdgeInsets.symmetric(
                         vertical: mediumMargin, horizontal: mediumMargin),
                     child: Text(
-                      AppLocalizations.of(context)!.listCommandTitle,
+                      AppLocalizations.of(context)!.listArticleTitle,
                       style: GoogleFonts.montserrat(
                           fontSize: largeTextSize, fontWeight: FontWeight.bold),
                     ),
@@ -90,11 +92,7 @@ class _CommandListViewState extends State<CommandListView> {
                     shrinkWrap: true,
                     initialItemCount: list["titles"]?.length ?? 0,
                     itemBuilder: (context, index, animation) {
-                      return ListBuilder(position: index,
-                          animation: animation,
-                          list: list,
-                          scrollController: scrollController,
-                          onDelete: () => removeCommand(index));
+                      return ListBuilder(position: index, animation: animation, list: list, scrollController: scrollController, onDelete: () => removeArticle(index));
                     },
                   ),
                 ],
