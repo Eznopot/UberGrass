@@ -11,7 +11,7 @@ import 'admin_page_controller.dart';
 
 class AdminPageView extends StatefulWidget {
   const AdminPageView({Key? key}) : super(key: key);
-  static const String routeName = "/admin_page";
+  static const String routeName = "/home_page_admin";
   @override
   State<AdminPageView> createState() => _AdminPageViewState();
 }
