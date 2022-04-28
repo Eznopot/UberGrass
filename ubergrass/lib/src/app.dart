@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ubergrass/src/page/admin_page/admin_page_view.dart';
-import 'package:ubergrass/src/page/command_list/command_list_view.dart';
 import 'package:ubergrass/src/page/complete_information/complete_information_view.dart';
 import 'package:ubergrass/src/page/home/seller/home_seller_view.dart';
 import 'package:ubergrass/src/page/register/register_view.dart';
@@ -47,8 +46,6 @@ class MyApp extends StatelessWidget {
                     return SettingsView(controller: settingsController);
                   case CompleteInformationView.routeName:
                     return const CompleteInformationView();
-                  case CommandListView.routeName:
-                    return const CommandListView();
                   case AdminPageView.routeName:
                     return const AdminPageView();
                   case HomeSellerView.routeName:

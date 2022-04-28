@@ -5,6 +5,7 @@ import '../../../constant/size.dart';
 import '../../../widget/widget/dialog/create_article_dialog/create_article_dialog_widget.dart';
 import '../../../widget/widget/dialog/exit_will_pop.dart';
 import '../../../widget/widget/drawer.dart';
+import '../../../widget/widget/list/list_builder.dart';
 import '../../../widget/widget/placement/custom_center.dart';
 import 'home_seller_controller.dart';
 
@@ -17,18 +18,73 @@ class HomeSellerView extends StatefulWidget {
 
 class _HomeSellerViewState extends State<HomeSellerView> {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
+  final ScrollController scrollController = ScrollController();
   HomeSellerController controller = HomeSellerController();
+  List<dynamic>? list;
+  bool isInserted = true;
 
+  insertArticle(int index) {
+    if (list == null) return;
+    for (var i = index; i < list!.length; i++) {
+      listKey.currentState
+          ?.insertItem(i, duration: const Duration(milliseconds: 200));
+    }
+    isInserted = true;
+  }
 
+  removeArticle(int index) {
+    if (list != null) {
+      listKey.currentState?.removeItem(
+          index,
+          (_, animation) => ListBuilder(
+              position: index,
+              animation: animation,
+              list: list!,
+              scrollController: scrollController,
+              onDelete: () => removeArticle(index)),
+          duration: const Duration(milliseconds: 200));
+    }
+  }
+
+  loadArticle() {
+    if (list == null) return;
+    for (var i = 0; i < list!.length; i++) {
+      listKey.currentState
+          ?.insertItem(i, duration: const Duration(milliseconds: 200));
+    }
+  }
 
   @override
   void initState() {
     controller.getArticles(0, 10).then((value) {
-
+      list = value;
+      setState(() {
+        loadArticle();
+      });
+    });
+    scrollController.addListener(() {
+      double maxScroll = scrollController.position.maxScrollExtent;
+      double currentScroll = scrollController.position.pixels;
+      double delta = 200.0;
+      if (list != null) {
+        int index = list!.length;
+        if (maxScroll - currentScroll <= delta && isInserted) {
+          print("get other article");
+          controller
+              .getArticles(index, MediaQuery.of(context).size.height ~/ 30)
+              .then((value) {
+            if (value != null) {
+              list!.addAll(value);
+              insertArticle(index);
+            }
+          });
+          isInserted = false;
+        }
+      }
     });
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,17 +93,16 @@ class _HomeSellerViewState extends State<HomeSellerView> {
       child: Scaffold(
         drawer: MyDrawer(context: context),
         key: scaffoldKey,
-        body: Stack(
-          children: <Widget>[
-            IconButton(
-              onPressed: () {
-                scaffoldKey.currentState!.openDrawer();
-              },
-              icon: const Icon(Icons.menu, color: Colors.black),
-            ),
-            CustomCenter(
-              padding: EdgeInsets.symmetric(vertical: size.height / 4),
-              child: Column(
+        body: SafeArea(
+          child: Stack(
+            children: <Widget>[
+              IconButton(
+                onPressed: () {
+                  scaffoldKey.currentState!.openDrawer();
+                },
+                icon: const Icon(Icons.menu, color: Colors.black),
+              ),
+              Column(
                 children: <Widget>[
                   Text(
                     AppLocalizations.of(context)!.homeTitle,
@@ -55,22 +110,29 @@ class _HomeSellerViewState extends State<HomeSellerView> {
                     style: GoogleFonts.montserrat(
                         fontSize: largeTextSize, fontWeight: FontWeight.bold),
                   ),
-                  CustomCenter(
-                    padding: EdgeInsets.symmetric(
-                        vertical: mediumMargin, horizontal: mediumMargin),
-                    child: Text(
-                      AppLocalizations.of(context)!.homeDescription,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
-                        fontSize: mediumTextSize,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  SizedBox(height: mediumMargin),
+                  list != null
+                      ? Expanded(
+                          child: AnimatedList(
+                            controller: scrollController,
+                            key: listKey,
+                            shrinkWrap: true,
+                            initialItemCount: list?.length ?? 0,
+                            itemBuilder: (context, index, animation) {
+                              return ListBuilder(
+                                  position: index,
+                                  animation: animation,
+                                  list: list!,
+                                  scrollController: scrollController,
+                                  onDelete: () => removeArticle(index));
+                            },
+                          ),
+                        )
+                      : Container(),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         floatingActionButton: IconButton(
           icon: const Icon(Icons.add),
@@ -81,7 +143,16 @@ class _HomeSellerViewState extends State<HomeSellerView> {
               builder: (context) {
                 return const CreateArticleDialog();
               },
-            );
+            ).then((value) {
+              if (value) {
+                controller.getArticles(0, 10).then((value) {
+                  list = value;
+                  setState(() {
+                    loadArticle();
+                  });
+                });
+              }
+            });
           },
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.

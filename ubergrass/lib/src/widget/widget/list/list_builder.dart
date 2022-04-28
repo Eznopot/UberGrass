@@ -15,7 +15,7 @@ class ListBuilder extends StatelessWidget {
       })
       : super(key: key);
   int position;
-  Map<String, List<String>?> list;
+  List<dynamic> list;
   Animation<double> animation;
   final ScrollController scrollController;
   VoidCallback? onDelete;
@@ -29,7 +29,7 @@ class ListBuilder extends StatelessWidget {
         end: const Offset(0, 0),
       ).animate(animation),
       child: ListElement(
-        list: list,
+        map: list[position]["data"],
         maxChar: 20,
         scrollController: scrollController,
         position: position,
