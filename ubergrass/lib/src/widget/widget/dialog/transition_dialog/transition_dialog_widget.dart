@@ -21,6 +21,9 @@ class _TransitionDialog extends State<TransitionDialog> {
 
   @override void initState() {
     super.initState();
+    controller.getNextPage(widget.nextPage).then((value) {
+      Navigator.pop(context, value);
+    });
   }
 
   @override

@@ -2,19 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../constant/size.dart';
+import '../../../widget/widget/dialog/create_article_dialog/create_article_dialog_widget.dart';
 import '../../../widget/widget/dialog/exit_will_pop.dart';
 import '../../../widget/widget/drawer.dart';
 import '../../../widget/widget/placement/custom_center.dart';
+import 'home_seller_controller.dart';
 
 class HomeSellerView extends StatefulWidget {
   const HomeSellerView({Key? key}) : super(key: key);
-  static const String routeName = "/home";
+  static const String routeName = "/home_page_seller";
   @override
   State<HomeSellerView> createState() => _HomeSellerViewState();
 }
 
 class _HomeSellerViewState extends State<HomeSellerView> {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  HomeSellerController controller = HomeSellerController();
+
+
+
+  @override
+  void initState() {
+    controller.getArticles(0, 10).then((value) {
+
+    });
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +74,15 @@ class _HomeSellerViewState extends State<HomeSellerView> {
         ),
         floatingActionButton: IconButton(
           icon: const Icon(Icons.add),
-          onPressed: () {  },
+          onPressed: () {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) {
+                return const CreateArticleDialog();
+              },
+            );
+          },
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );

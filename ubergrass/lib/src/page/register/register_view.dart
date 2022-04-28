@@ -9,8 +9,6 @@ import '../../constant/size.dart';
 import '../../widget/widget/dialog/transition_dialog/transition_dialog_widget.dart';
 import '../../widget/widget/placement/custom_center.dart';
 import '../complete_information/complete_information_view.dart';
-import '../home/home_view.dart';
-
 enum UserType { User, Manager }
 
 class RegisterView extends StatefulWidget {
@@ -26,32 +24,35 @@ class _RegisterViewState extends State<RegisterView> {
       TextEditingController();
   ButtonState buttonState = ButtonState.normal;
 
+  void process(BuildContext context) {
+    controller.removeListener(() {
+      process(context);
+    });
+    if (controller.connected) {
+      controller.userCompleted().then((value) {
+        if (value) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return const TransitionDialog(title: "Loading...", nextPage: 'Home',);
+            },
+          ).then((value) {
+            Navigator.popAndPushNamed(context, value);
+          });
+        } else {
+          Navigator.popAndPushNamed(context, CompleteInformationView.routeName);
+        }
+      });
+    } else {
+      setState(() {
+        buttonState = ButtonState.error;
+      });
+    }
+  }
+
   @override
   void initState() {
-    controller.addListener(() {
-      if (controller.connected) {
-        controller.userCompleted().then((value) {
-          if (value) {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) {
-                return TransitionDialog(title: "Loading...", nextPage: '/home_page',);
-              },
-            ).then((value) {
-              print(value);
-              //Navigator.popAndPushNamed(context, HomeView.routeName);
-            });
-          } else {
-            Navigator.popAndPushNamed(context, CompleteInformationView.routeName);
-          }
-        });
-      } else {
-        setState(() {
-          buttonState = ButtonState.error;
-        });
-      }
-    });
     super.initState();
   }
 
@@ -89,6 +90,9 @@ class _RegisterViewState extends State<RegisterView> {
                           onPressed: () {
                             setState(() {
                               buttonState = ButtonState.inProgress;
+                            });
+                            controller.addListener(() {
+                              process(context);
                             });
                             controller.createUser(
                               textEditingControllerTelephone.text, context);

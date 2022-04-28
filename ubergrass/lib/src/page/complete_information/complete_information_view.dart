@@ -5,8 +5,8 @@ import 'package:ubergrass/src/widget/widget/button/progress_button.dart';
 import 'package:ubergrass/src/widget/widget/textfield/custom_text_field.dart';
 import '../../constant/size.dart';
 import '../../widget/widget/dialog/exit_will_pop.dart';
+import '../../widget/widget/dialog/transition_dialog/transition_dialog_widget.dart';
 import '../../widget/widget/placement/custom_center.dart';
-import '../home/home_view.dart';
 import 'complete_information_controller.dart';
 
 class CompleteInformationView extends StatefulWidget {
@@ -165,7 +165,15 @@ class _CompleteInformationViewState extends State<CompleteInformationView> {
                                   setState(() {
                                     buttonState = ButtonState.normal;
                                   });
-                                  Navigator.popAndPushNamed(context, HomeView.routeName);
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) {
+                                      return const TransitionDialog(title: "Loading...", nextPage: 'Home',);
+                                    },
+                                  ).then((value) {
+                                    Navigator.popAndPushNamed(context, value);
+                                  });
                                 } else {
                                   setState(() {
                                     buttonState = ButtonState.error;

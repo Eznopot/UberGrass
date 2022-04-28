@@ -14,6 +14,9 @@ class RegisterService with ChangeNotifier {
     FirebaseFunctions function = FirebasePackage.getFunction();
     var httpsCallable = function.httpsCallable("getMe");
     final response = await httpsCallable();
+    if (response.data == null) {
+      return false;
+    }
     return response.data["Status"] == "Complete";
   }
 
@@ -114,7 +117,6 @@ class RegisterService with ChangeNotifier {
             }
           },
           codeAutoRetrievalTimeout: (e) {
-            notifyListeners();
             print(e);
           },
         );

@@ -4,7 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ubergrass/src/page/admin_page/admin_page_view.dart';
 import 'package:ubergrass/src/page/command_list/command_list_view.dart';
 import 'package:ubergrass/src/page/complete_information/complete_information_view.dart';
-import 'package:ubergrass/src/page/home/home_view.dart';
+import 'package:ubergrass/src/page/home/seller/home_seller_view.dart';
 import 'package:ubergrass/src/page/register/register_view.dart';
 import 'package:ubergrass/src/page/settings/settings_controller.dart';
 import 'package:ubergrass/src/page/settings/settings_view.dart';
@@ -45,14 +45,14 @@ class MyApp extends StatelessWidget {
                 switch (routeSettings.name) {
                   case SettingsView.routeName:
                     return SettingsView(controller: settingsController);
-                  case HomeView.routeName:
-                    return const HomeView();
                   case CompleteInformationView.routeName:
                     return const CompleteInformationView();
                   case CommandListView.routeName:
                     return const CommandListView();
                   case AdminPageView.routeName:
                     return const AdminPageView();
+                  case HomeSellerView.routeName:
+                    return const HomeSellerView();
                   default:
                     return const RegisterView();
                 }

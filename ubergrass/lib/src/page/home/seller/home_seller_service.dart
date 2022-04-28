@@ -1,15 +1,14 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:ubergrass/src/firebase/firebase.dart';
 
-class TransitionDialogService  {
-
-  Future<String> getNextPage(String route) async {
+class HomeSellerService {
+  Future<void> getArticles(int start, int end) async {
     FirebaseFunctions function = FirebasePackage.getFunction();
-    HttpsCallable callable = function.httpsCallable("getMyPage");
+    HttpsCallable callable = function.httpsCallable("getArticles");
     dynamic response = await callable.call({
-      "pageName" : route
+      "start" : start, 
+      "end" : end,
     });
-    return response.data;
+    print(response.data);
   }
-
 }

@@ -15,8 +15,12 @@
   "nameInputTextLabel" : "Name",
   "emailInputTextLabel" : "Email",
   "completeButton" : "Complete",
-
   "listCommandTitle" : "order",
 
-  "listArticleTitle" : "Article"
+  "listArticleTitle" : "Article",
+
+  "dialogCreateArticleTitle" : "Title",
+  "dialogCreateArticlePrice" : "Price",
+  "dialogCreateArticleWeight" : "Weight",
+  "dialogCreateArticleQuantity" : "Quantity"
 }
