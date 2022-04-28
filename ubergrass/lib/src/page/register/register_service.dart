@@ -14,7 +14,6 @@ class RegisterService with ChangeNotifier {
     FirebaseFunctions function = FirebasePackage.getFunction();
     var httpsCallable = function.httpsCallable("getMe");
     final response = await httpsCallable();
-    print(response.data);
     return response.data["Status"] == "Complete";
   }
 

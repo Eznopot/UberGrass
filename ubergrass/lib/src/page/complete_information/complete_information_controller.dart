@@ -10,7 +10,6 @@ class CompleteInformationController {
 
   Future<int> updateInformations(String email, String name, String role, String city) async {
     return await service.completeUserInformations(email, name, role, city);
-
   }
 
   Future<List<String>?> getCities() async {

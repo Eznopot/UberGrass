@@ -5,8 +5,8 @@ import 'package:ubergrass/src/page/register/register_controller.dart';
 import 'package:ubergrass/src/widget/widget/button/progress_button.dart';
 import 'package:ubergrass/src/widget/widget/textfield/custom_text_field.dart';
 import '../../widget/widget/dialog/exit_will_pop.dart';
-import '../admin_page/admin_page_view.dart';
 import '../../constant/size.dart';
+import '../../widget/widget/dialog/transition_dialog/transition_dialog_widget.dart';
 import '../../widget/widget/placement/custom_center.dart';
 import '../complete_information/complete_information_view.dart';
 import '../home/home_view.dart';
@@ -32,7 +32,16 @@ class _RegisterViewState extends State<RegisterView> {
       if (controller.connected) {
         controller.userCompleted().then((value) {
           if (value) {
-            Navigator.popAndPushNamed(context, HomeView.routeName);
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) {
+                return TransitionDialog(title: "Loading...", nextPage: '/home_page',);
+              },
+            ).then((value) {
+              print(value);
+              //Navigator.popAndPushNamed(context, HomeView.routeName);
+            });
           } else {
             Navigator.popAndPushNamed(context, CompleteInformationView.routeName);
           }
@@ -82,7 +91,7 @@ class _RegisterViewState extends State<RegisterView> {
                               buttonState = ButtonState.inProgress;
                             });
                             controller.createUser(
-                                textEditingControllerTelephone.text, context);
+                              textEditingControllerTelephone.text, context);
                           },
                         ),
                       ),

@@ -5,15 +5,16 @@ import '../../firebase/firebase.dart';
 
 
 class CompleteInformationService {
-  Future<int> completeUserInformations(String email, String name, String city, String role) async {
+  Future<int> completeUserInformations(String email, String name, String role, String city) async {
     FirebaseFunctions function = FirebasePackage.getFunction();
     var httpsCallable = function.httpsCallable("setUsers");
     var response = await httpsCallable.call({
       "rolesType" : role,
-      "cityType" : city,
+      "city" : city,
       "name" : name,
       "email" : email
     });
+
     if (response.data != null) {
       return 0;
     }
