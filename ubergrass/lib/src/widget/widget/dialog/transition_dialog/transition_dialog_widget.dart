@@ -18,7 +18,6 @@ class TransitionDialog extends StatefulWidget {
 class _TransitionDialog extends State<TransitionDialog> {
   final TransitionDialogController controller = TransitionDialogController();
 
-
   @override void initState() {
     super.initState();
     controller.getNextPage(widget.nextPage).then((value) {

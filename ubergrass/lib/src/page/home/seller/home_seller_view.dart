@@ -7,6 +7,7 @@ import '../../../widget/widget/dialog/exit_will_pop.dart';
 import '../../../widget/widget/drawer.dart';
 import '../../../widget/widget/list/list_builder.dart';
 import '../../../widget/widget/placement/custom_center.dart';
+import '../../edit_article/edit_article_view.dart';
 import 'home_seller_controller.dart';
 
 class HomeSellerView extends StatefulWidget {
@@ -47,6 +48,14 @@ class _HomeSellerViewState extends State<HomeSellerView> {
     }
   }
 
+  reloadArticle() {
+    if (list == null) return;
+    for (var i = 0; i < list!.length; i++) {
+      listKey.currentState
+          ?.insertItem(i, duration: const Duration(milliseconds: 200));
+    }
+  }
+
   loadArticle() {
     if (list == null) return;
     for (var i = 0; i < list!.length; i++) {
@@ -70,7 +79,6 @@ class _HomeSellerViewState extends State<HomeSellerView> {
       if (list != null) {
         int index = list!.length;
         if (maxScroll - currentScroll <= delta && isInserted) {
-          print("get other article");
           controller
               .getArticles(index, MediaQuery.of(context).size.height ~/ 30)
               .then((value) {
@@ -80,6 +88,10 @@ class _HomeSellerViewState extends State<HomeSellerView> {
             }
           });
           isInserted = false;
+        } else {
+          Future.delayed(const Duration(seconds: 1)).then((value) {
+            isInserted = false;
+          });
         }
       }
     });
@@ -124,7 +136,11 @@ class _HomeSellerViewState extends State<HomeSellerView> {
                                   animation: animation,
                                   list: list!,
                                   scrollController: scrollController,
-                                  onDelete: () => removeArticle(index));
+                                  onDelete: () => removeArticle(index),
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, EditArticleView.routeName, arguments: list![index]);
+                                  }
+                              );
                             },
                           ),
                         )
@@ -144,14 +160,7 @@ class _HomeSellerViewState extends State<HomeSellerView> {
                 return const CreateArticleDialog();
               },
             ).then((value) {
-              if (value) {
-                controller.getArticles(0, 10).then((value) {
-                  list = value;
-                  setState(() {
-                    loadArticle();
-                  });
-                });
-              }
+              Navigator.popAndPushNamed(context, HomeSellerView.routeName);
             });
           },
         ),

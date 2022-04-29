@@ -22,5 +22,11 @@
   "dialogCreateArticleTitle" : "Title",
   "dialogCreateArticlePrice" : "Price",
   "dialogCreateArticleWeight" : "Weight",
-  "dialogCreateArticleQuantity" : "Quantity"
+  "dialogCreateArticleQuantity" : "Quantity",
+
+  "editArticleViewTitle" : "Edit",
+  "editArticleViewName" : "Name",
+  "editArticleViewPrice" : "Price",
+  "editArticleViewQuantity" : "Quantity",
+  "editArticleViewWeight" : "Weight in grammes"
 }
