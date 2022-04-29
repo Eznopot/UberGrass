@@ -89,17 +89,16 @@ exports.UserLogin = functions.auth.user().onCreate(async (usr) => {
   return true;
 });
 
-exports.UserDelete = functions.auth.user().onDelete(async (usr) => {
+exports.UserDelete = functions.auth.user().onDelete(async (data, context) => {
   const _Articles = db.collection("Articles")
-      .where("CreateBy", "array-contains", usr.uid);
+      .where("CreateBy", "array-contains", context.auth.uid);
   deleteDoc(_Articles);
-  const _User = db.collection("Users").doc(usr.uid);
+  const _User = db.collection("Users").doc(context.auth.uid);
   const user = await _User.get();
 
   db.collection("Groups").doc(user.data().Groups).update({
-    test: "niqueLesTests",
     [`Who.${usr.Roles.Type}`]: admin.firestore.FieldValue.
-        arrayRemove(usr.uid),
+        arrayRemove(context.auth.uid),
   });
   user.delete();
   return true;
@@ -195,26 +194,23 @@ exports.getArticlesInGroup = functions.https.onCall(async (data, context) => {
   if (!getMyRight(context, "Read", "Articles")) {
     return;
   }
+
   const docUser = db.collection("Users").doc(context.auth.uid);
   const usr = await docUser.get();
   const _Groups = db.collection("Groups").doc(usr.data().Groups);
   const group = await _Groups.get();
-  const _Seller = await group.data()["Seller"];
-  const mapSeller = createMappingDataId(_Seller);
+  const _idSeller = await group.data().Who.Seller;
   const Articles = [];
 
-  if (mapSeller.empty()) {
-    return [];
-  }
+  _idSeller.forEach(async (id) => {
+    const mapA = await db.collection("Articles").where("CreateBy", "==", id);
+    const md = await mapA.get();
 
-  mapSeller.forEach(async (a) => {
-    const mapA = db.collection("Articles").where("CreateBy", "==", a.id);
-
-    Articles.push(await mapA.get());
+    Articles.push({data: md.data(), id: md.id});
   });
 
   return await selectInArray(
-      await createMappingDataId(Articles.flat()),
+      await createMappingDataId(Articles),
       data.start,
       data.end);
 });
@@ -278,3 +274,8 @@ async function getMyRight(context, rw, obj) {
 
   return (await rights.data()[rw][obj]);
 }
+
+/* Ordered Functions */
+
+exports.getOrdered = functions.https.onCall(async (data, context) => {
+});
