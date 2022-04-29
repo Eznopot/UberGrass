@@ -24,7 +24,7 @@ class CompleteInformationService {
   Future<List<String>?> getCities() async {
     List<String> arr = [];
     FirebaseFunctions function = FirebasePackage.getFunction();
-    var httpsCallable = function.httpsCallable("getCity");
+    var httpsCallable = function.httpsCallable("getCities");
     final response = await httpsCallable();
     for (dynamic elem in response.data) {
       arr.add(elem["Name"]);

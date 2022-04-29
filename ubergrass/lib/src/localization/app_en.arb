@@ -28,5 +28,8 @@
   "editArticleViewName" : "Name",
   "editArticleViewPrice" : "Price",
   "editArticleViewQuantity" : "Quantity",
-  "editArticleViewWeight" : "Weight in grammes"
+  "editArticleViewWeight" : "Weight in grammes",
+
+  "articleVisualisationViewTitle" : "Buy !",
+  "articleVisualisationViewQuantity" : "Quantity :"
 }

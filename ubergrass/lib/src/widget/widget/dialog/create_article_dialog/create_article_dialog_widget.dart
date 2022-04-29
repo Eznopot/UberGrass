@@ -39,28 +39,36 @@ class _CreateArticleDialog extends State<CreateArticleDialog> {
                 : <Widget>[]),
         actions: requestSend == false
             ? <Widget>[
-                CustomTextField(
-                  labelText:
-                      AppLocalizations.of(context)!.dialogCreateArticleTitle,
-                  controller: titleController,
+                Expanded(
+                  child: CustomTextField(
+                    labelText:
+                        AppLocalizations.of(context)!.dialogCreateArticleTitle,
+                    controller: titleController,
+                  ),
                 ),
-                CustomTextField(
-                  labelText:
-                      AppLocalizations.of(context)!.dialogCreateArticlePrice,
-                  textInputType: TextInputType.number,
-                  controller: priceController,
+                Expanded(
+                  child: CustomTextField(
+                    labelText:
+                        AppLocalizations.of(context)!.dialogCreateArticlePrice,
+                    textInputType: TextInputType.number,
+                    controller: priceController,
+                  ),
                 ),
-                CustomTextField(
-                  textInputType: TextInputType.number,
-                  labelText:
-                      AppLocalizations.of(context)!.dialogCreateArticleQuantity,
-                  controller: quantityController,
+                Expanded(
+                  child: CustomTextField(
+                    textInputType: TextInputType.number,
+                    labelText: AppLocalizations.of(context)!
+                        .dialogCreateArticleQuantity,
+                    controller: quantityController,
+                  ),
                 ),
-                CustomTextField(
-                  textInputType: TextInputType.number,
-                  labelText:
-                      AppLocalizations.of(context)!.dialogCreateArticleWeight,
-                  controller: weightController,
+                Expanded(
+                  child: CustomTextField(
+                    textInputType: TextInputType.number,
+                    labelText:
+                        AppLocalizations.of(context)!.dialogCreateArticleWeight,
+                    controller: weightController,
+                  ),
                 ),
                 TextButton(
                   onPressed: () => {

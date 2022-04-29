@@ -8,22 +8,23 @@ import '../../../widget/widget/drawer.dart';
 import '../../../widget/widget/list/list_builder.dart';
 import '../../../widget/widget/placement/custom_center.dart';
 import '../../edit_article/edit_article_view.dart';
-import 'home_seller_controller.dart';
+import 'home_buyer_controller.dart';
 
-class HomeSellerView extends StatefulWidget {
-  const HomeSellerView({Key? key}) : super(key: key);
-  static const String routeName = "/home_page_seller";
+class HomeBuyerView extends StatefulWidget {
+  const HomeBuyerView({Key? key}) : super(key: key);
+  static const String routeName = "/home_page_buyer";
   @override
-  State<HomeSellerView> createState() => _HomeSellerViewState();
+  State<HomeBuyerView> createState() => _HomeBuyerViewState();
 }
 
-class _HomeSellerViewState extends State<HomeSellerView> {
+class _HomeBuyerViewState extends State<HomeBuyerView> {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
   final ScrollController scrollController = ScrollController();
-  HomeSellerController controller = HomeSellerController();
+  HomeBuyerController controller = HomeBuyerController();
   List<dynamic>? list;
   bool isInserted = true;
+
 
   insertArticle(int index) {
     if (list == null) return;
@@ -32,20 +33,6 @@ class _HomeSellerViewState extends State<HomeSellerView> {
           ?.insertItem(i, duration: const Duration(milliseconds: 200));
     }
     isInserted = true;
-  }
-
-  removeArticle(int index) {
-    if (list != null) {
-      listKey.currentState?.removeItem(
-          index,
-          (_, animation) => ListBuilder(
-              position: index,
-              animation: animation,
-              list: list!,
-              scrollController: scrollController,
-              onDelete: () => removeArticle(index)),
-          duration: const Duration(milliseconds: 200));
-    }
   }
 
   reloadArticle() {
@@ -136,7 +123,6 @@ class _HomeSellerViewState extends State<HomeSellerView> {
                                   animation: animation,
                                   list: list!,
                                   scrollController: scrollController,
-                                  onDelete: () => removeArticle(index),
                                   onPressed: () {
                                     Navigator.pushNamed(context, EditArticleView.routeName, arguments: list![index]);
                                   }
@@ -149,21 +135,6 @@ class _HomeSellerViewState extends State<HomeSellerView> {
               ),
             ],
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.green,
-          child: const Icon(Icons.add, color: Colors.white,),
-          onPressed: () {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) {
-                return const CreateArticleDialog();
-              },
-            ).then((value) {
-              Navigator.popAndPushNamed(context, HomeSellerView.routeName);
-            });
-          },
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );

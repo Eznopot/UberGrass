@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ubergrass/src/page/admin_page/admin_page_view.dart';
 import 'package:ubergrass/src/page/complete_information/complete_information_view.dart';
 import 'package:ubergrass/src/page/edit_article/edit_article_view.dart';
+import 'package:ubergrass/src/page/home/buyer/home_buyer_view.dart';
 import 'package:ubergrass/src/page/home/seller/home_seller_view.dart';
 import 'package:ubergrass/src/page/register/register_view.dart';
 import 'package:ubergrass/src/page/settings/settings_controller.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(),
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
-          initialRoute: "/home_page_admin",
+          initialRoute: "/register",
           onGenerateRoute: (RouteSettings routeSettings) {
             return MaterialPageRoute<void>(
               settings: routeSettings,
@@ -51,6 +52,8 @@ class MyApp extends StatelessWidget {
                     return const AdminPageView();
                   case HomeSellerView.routeName:
                     return const HomeSellerView();
+                  case HomeBuyerView.routeName:
+                    return const HomeBuyerView();
                   case EditArticleView.routeName:
                     if (routeSettings.arguments != null) {
                       return EditArticleView(data: routeSettings.arguments);
