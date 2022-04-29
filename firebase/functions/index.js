@@ -30,6 +30,7 @@ async function selectInArray(arr, start, end) {
 
 /* require and setUp FireBase Env */
 
+// const firebase = require("firebase-app");
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp(functions.config().admin);
@@ -72,16 +73,36 @@ async function createMappingDataId(data) {
   return map;
 }
 
+async function deleteDoc(data) {
+  const _data = await data.get();
+  _data.forEach((doc) => {
+    doc.ref.delete();
+  });
+}
+
 /* User Functions */
 
 exports.UserLogin = functions.auth.user().onCreate(async (usr) => {
-  return db.collection("Users").doc(usr.uid).set({
-    // PhoneNumber: usr.phone,
+  db.collection("Users").doc(usr.uid).set({
     Status: "Incomplete",
-  }).catch((err) => {
-    console.log(err);
-    return;
   });
+  return true;
+});
+
+exports.UserDelete = functions.auth.user().onDelete(async (usr) => {
+  const _Articles = db.collection("Articles")
+      .where("CreateBy", "array-contains", usr.uid);
+  deleteDoc(_Articles);
+  const _User = db.collection("Users").doc(usr.uid);
+  const user = await _User.get();
+
+  db.collection("Groups").doc(user.data().Groups).update({
+    test: "niqueLesTests",
+    [`Who.${usr.Roles.Type}`]: admin.firestore.FieldValue.
+        arrayRemove(usr.uid),
+  });
+  user.delete();
+  return true;
 });
 
 exports.getUsers = functions.https.onCall(async () => {
@@ -92,33 +113,22 @@ exports.setUsers = functions.https.onCall(async (data, context) => {
   const _Roles = await mappingType("Type", "Roles", "==", data.rolesType);
   const _Rights = await mappingType("Type", "Rights", "==", _Roles.data.Type);
   const _Pages = await mappingType("Who", "Pages", "==", _Roles.data.Type);
-  const _Cities = await mappingType("Name", "Cities", "==", data.city);
-  const nGroups = await db.collection("Groups")
-      .where("Who", "array-contains", _Roles.data.Type).get();
-  const _Groups = [];
-  nGroups.forEach((G) => {
-    _Groups.push(G.id);
+  const _Groups = await mappingType("Name", "Groups", "==", data.city);
+
+  await db.collection("Groups").doc(_Groups.uid).update({
+    [`Who.${_Roles.data.Type}`]: admin.firestore.FieldValue
+        .arrayUnion(context.auth.uid),
   });
-  db.collection("Cities").doc(_Cities.uid).update({
-    Number: {
-      Buyer: _Cities.data.Number.Buyer +
-          (_Roles.data.Type == "Buyer" ? 1 : 0),
-      Delivery: _Cities.data.Number.Delivery +
-          (_Roles.data.Type == "Delivery" ? 1 : 0),
-      Seller: _Cities.data.Number.Seller +
-          (_Roles.data.Type == "Seller" ? 1 : 0),
-    },
-  });
-  return db.collection("Users").doc(context.auth.uid).set({
-    Groups: _Groups,
+  await db.collection("Users").doc(context.auth.uid).set({
+    Groups: _Groups.uid,
     Pages: _Pages.uid,
     Roles: _Roles.uid,
-    City: _Cities.uid,
     Rights: _Rights.uid,
     Status: "Complete",
     Name: data.name,
     Email: data.email,
   });
+  return;
 });
 
 /* "My" Functions */
@@ -141,8 +151,14 @@ exports.getMyPage = functions.https.onCall(async (data, context) => {
 
 /* Cities Functions */
 
-exports.getCity = functions.https.onCall(async () => {
-  return await getTable("Cities");
+exports.getCities = functions.https.onCall(async () => {
+  const _Cities = await getTable("Groups");
+
+  return _Cities.map((arr) => {
+    return {
+      Name: arr.Name,
+    };
+  });
 });
 
 /* Articles Functions */
@@ -158,19 +174,49 @@ exports.createArticles = functions.https.onCall(async (data, context) => {
     Quantity: data.quantity,
     Weight: data.weight,
   };
-  return db.collection("Articles").add(Article);
+  await db.collection("Articles").add(Article);
+  return true;
 });
 
 exports.modifyArticles = functions.https.onCall(async (data, context) => {
   if (!getMyRight(context, "Write", "Articles")) {
-    return;
+    return "No Right to modify articles";
   }
-  return db.collection("Articles").doc(data.id).update({
+  db.collection("Articles").doc(data.id).update({
     Name: data.name,
     Price: data.price,
     Quantity: data.quantity,
     Weight: data.weight,
   });
+  return true;
+});
+
+exports.getArticlesInGroup = functions.https.onCall(async (data, context) => {
+  if (!getMyRight(context, "Read", "Articles")) {
+    return;
+  }
+  const docUser = db.collection("Users").doc(context.auth.uid);
+  const usr = await docUser.get();
+  const _Groups = db.collection("Groups").doc(usr.data().Groups);
+  const group = await _Groups.get();
+  const _Seller = await group.data()["Seller"];
+  const mapSeller = createMappingDataId(_Seller);
+  const Articles = [];
+
+  if (mapSeller.empty()) {
+    return [];
+  }
+
+  mapSeller.forEach(async (a) => {
+    const mapA = db.collection("Articles").where("CreateBy", "==", a.id);
+
+    Articles.push(await mapA.get());
+  });
+
+  return await selectInArray(
+      await createMappingDataId(Articles.flat()),
+      data.start,
+      data.end);
 });
 
 exports.getArticles = functions.https.onCall(async (data, context) => {
@@ -180,10 +226,31 @@ exports.getArticles = functions.https.onCall(async (data, context) => {
   const docArticles = db.collection("Articles")
       .where("CreateBy", "==", context.auth.uid);
   const Articles = await docArticles.get();
-  return selectInArray(
+  return await selectInArray(
       await createMappingDataId(Articles),
       data.start,
       data.end);
+});
+
+exports.buyArticles = functions.https.onCall(async (data, context) => {
+  if (!getMyRight(context, "Write", "Ordered")) {
+    return;
+  }
+
+  const docArtocle = db.collection("Articles").doc(data.id);
+  const art = await docArtocle.get();
+
+  const Ordered = {
+    Articles: data.id,
+    Buyer: context.auth.uid,
+    Quantity: data.quantity,
+    Seller: art.data().CreateBy,
+    Time: new Date().now(),
+  };
+
+  await db.collection("Ordered").add(Ordered);
+
+  return true;
 });
 
 /* Roles Functions */
@@ -206,8 +273,8 @@ async function getMyRight(context, rw, obj) {
   const docUser = db.collection("Users").doc(context.auth.uid);
   const usr = await docUser.get();
 
-  const docRights = db.collection("Rights").doc(usr.data().Rights);
+  const docRights = db.collection("Rights").doc(await usr.data().Rights);
   const rights = await docRights.get();
 
-  return (rights.data()[rw][obj]);
+  return (await rights.data()[rw][obj]);
 }

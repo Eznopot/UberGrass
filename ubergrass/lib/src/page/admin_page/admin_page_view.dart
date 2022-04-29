@@ -67,11 +67,19 @@ class _AdminPageViewState extends State<AdminPageView> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
-                            ContainerBorderWidget(inContainer: const Center(child: Text("User"))),
-                            ContainerBorderWidget(inContainer: const Center(child: Text("Groups"))),
-                            ContainerBorderWidget(inContainer: const Center(child: Text("Roles"))),
-                            ContainerBorderWidget(inContainer: const Center(child: Text("Rights"))),
-                            ContainerBorderWidget(flexSize: 4, inContainer: const Text("")),
+                            ContainerBorderWidget(
+                                inContainer: const Center(child: Text("User"))),
+                            ContainerBorderWidget(
+                                inContainer:
+                                    const Center(child: Text("Groups"))),
+                            ContainerBorderWidget(
+                                inContainer:
+                                    const Center(child: Text("Roles"))),
+                            ContainerBorderWidget(
+                                inContainer:
+                                    const Center(child: Text("Rights"))),
+                            ContainerBorderWidget(
+                                flexSize: 4, inContainer: const Text("")),
                           ],
                         ),
                       )),
@@ -83,15 +91,19 @@ class _AdminPageViewState extends State<AdminPageView> {
                   color: const Color.fromARGB(255, 134, 134, 134),
                   child: Row(
                     children: <Widget>[
-                      ContainerBorderWidget(flexSize: 3, borderStyle: const Border(
-                        right : BorderSide(width: 1.0, color: Color.fromARGB(255, 0, 0, 0))),
+                      ContainerBorderWidget(
+                        flexSize: 3,
+                        inContainer: Column(
+                          children: <Widget>[
+                            ContainerBorderWidget(flexSize: 10),
+                            ContainerBorderWidget(flexSize: 10),
+                            ContainerBorderWidget(flexSize: 10),
+
+                          ],
+                        ),
                       ),
-                      ContainerBorderWidget(flexSize: 10, borderStyle: const Border(
-                          right : BorderSide(width: 1.0, color: Color.fromARGB(255, 0, 0, 0))),
-                      ),
-                      ContainerBorderWidget(flexSize: 3, borderStyle: const Border(
-                          right : BorderSide(width: 1.0, color: Color.fromARGB(255, 0, 0, 0))),
-                      ),
+                      ContainerBorderWidget(flexSize: 10),
+                      ContainerBorderWidget(flexSize: 3),
                     ],
                   ),
                 ),
@@ -121,12 +133,13 @@ class ContainerBorderWidget extends StatelessWidget {
       flex: flexSize ?? 1,
       child: Container(
         decoration: BoxDecoration(
-          border: borderStyle ?? const Border(
-            right: BorderSide(
-              width: 1.0,
-              color: Color.fromARGB(255, 0, 0, 0),
-            ),
-          ),
+          border: borderStyle ??
+              const Border(
+                right: BorderSide(
+                  width: 1.0,
+                  color: Color.fromARGB(255, 0, 0, 0),
+                ),
+              ),
         ),
         child: inContainer ?? const Center(child: Text("Default Values")),
       ),
