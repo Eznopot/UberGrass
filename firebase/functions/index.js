@@ -73,12 +73,11 @@ async function createMappingDataId(data) {
   return map;
 }
 
-async function deleteDoc(data) {
-  const _data = await data.get();
-  _data.forEach((doc) => {
-    doc.ref.delete();
-  });
-}
+// async function deleteDoc(_data) {
+//   _data.forEach(async (doc) => {
+//     await doc.delete();
+//   });
+// }
 
 /* User Functions */
 
@@ -89,18 +88,28 @@ exports.UserLogin = functions.auth.user().onCreate(async (usr) => {
   return true;
 });
 
-exports.UserDelete = functions.auth.user().onDelete(async (data) => {
-  const _Articles = db.collection("Articles")
-      .where("CreateBy", "array-contains", data.uid);
-  deleteDoc(_Articles);
-  const _User = db.collection("Users").doc(data.uid);
-  const user = await _User.get();
+async function debug(debug) {
+  db.collection("debug").doc("debug").set({});
+  debug.forEach((a) => {
+    db.collection("debug").doc("debug").update({
+      [a.key]: a.data,
+    });
+  });
+}
 
-  db.collection("Groups").doc(user.data().Groups).update({
+exports.UserDelete = functions.auth.user().onDelete(async (data) => {
+  const _user = db.collection("Users").doc(data.uid);
+  const user = await _user.get();
+  const _Articles = db.collection("Articles")
+      .where("CreateBy", "==", data.uid);
+  debug([{key: 1, data: _Articles}, {key: 2, data: user},
+      {key: 3, data: data.uid}]);
+  // deleteDoc(_Articles);
+  await db.collection("Groups").doc(user.data().Groups).update({
     [`Who.${user.data().Roles.Type}`]: admin.firestore.FieldValue.
         arrayRemove(data.uid),
   });
-  user.delete();
+  await _user.delete();
   return true;
 });
 
