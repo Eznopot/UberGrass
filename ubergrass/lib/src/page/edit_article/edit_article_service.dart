@@ -6,7 +6,7 @@ class EditArticleService {
   Future<bool> editArticle(String name, double price, int quantity, double weight, String id) async {
     FirebaseFunctions function = FirebasePackage.getFunction();
     HttpsCallable callable = function.httpsCallable("modifyArticles");
-    await callable.call({
+    final response = await callable.call({
       "name": name,
       "price": price,
       "quantity": quantity,

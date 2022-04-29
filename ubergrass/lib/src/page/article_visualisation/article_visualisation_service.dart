@@ -5,7 +5,7 @@ import '../../firebase/firebase.dart';
 class ArticleVisualisationService {
   Future<bool> buyArticle(int quantity, String id) async {
     FirebaseFunctions function = FirebasePackage.getFunction();
-    HttpsCallable callable = function.httpsCallable("modifyArticles");
+    HttpsCallable callable = function.httpsCallable("buyArticles");
     await callable.call({
       "quantity": quantity,
       "id" : id

@@ -7,6 +7,7 @@ import '../../../widget/widget/dialog/exit_will_pop.dart';
 import '../../../widget/widget/drawer.dart';
 import '../../../widget/widget/list/list_builder.dart';
 import '../../../widget/widget/placement/custom_center.dart';
+import '../../article_visualisation/article_visualisation_view.dart';
 import '../../edit_article/edit_article_view.dart';
 import 'home_buyer_controller.dart';
 
@@ -124,7 +125,7 @@ class _HomeBuyerViewState extends State<HomeBuyerView> {
                                   list: list!,
                                   scrollController: scrollController,
                                   onPressed: () {
-                                    Navigator.pushNamed(context, EditArticleView.routeName, arguments: list![index]);
+                                    Navigator.pushNamed(context, ArticleVisualisationView.routeName, arguments: list![index]);
                                   }
                               );
                             },

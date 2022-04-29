@@ -100,7 +100,7 @@ class _CreateArticleDialog extends State<CreateArticleDialog> {
                   child: const Text('Create'),
                 ),
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
+                  onPressed: () { Navigator.pop(context, false);},
                   child: const Text('Cancel'),
                 ),
               ]

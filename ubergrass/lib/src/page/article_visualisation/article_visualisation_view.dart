@@ -5,13 +5,14 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:ubergrass/src/widget/widget/button/progress_button.dart';
 import '../../constant/size.dart';
 import '../../widget/widget/dialog/loading_dialog.dart';
+import '../home/buyer/home_buyer_view.dart';
 import '../home/seller/home_seller_view.dart';
 import 'article_visualisation_controller.dart';
 
 class ArticleVisualisationView extends StatefulWidget {
   const ArticleVisualisationView({Key? key, required this.data})
       : super(key: key);
-  static const String routeName = "/edit_article";
+  static const String routeName = "/see_article";
 
   final dynamic data;
   @override
@@ -49,9 +50,8 @@ class _ArticleVisualisationViewState extends State<ArticleVisualisationView> {
               ),
               Text(
                 widget.data["data"]["Name"],
-                textAlign: TextAlign.center,
                 style: GoogleFonts.montserrat(
-                    fontSize: largeTextSize, fontWeight: FontWeight.bold),
+                    fontSize: mediumTextSize, fontWeight: FontWeight.normal),
               ),
               SizedBox(
                 height: mediumMargin,
@@ -62,9 +62,8 @@ class _ArticleVisualisationViewState extends State<ArticleVisualisationView> {
                     "for " +
                     widget.data["data"]["Weight"].toString() +
                     "g",
-                textAlign: TextAlign.center,
                 style: GoogleFonts.montserrat(
-                    fontSize: largeTextSize, fontWeight: FontWeight.bold),
+                    fontSize: mediumTextSize, fontWeight: FontWeight.normal),
               ),
               SizedBox(
                 height: mediumMargin,
@@ -72,9 +71,8 @@ class _ArticleVisualisationViewState extends State<ArticleVisualisationView> {
               Row(children: [
                 Text(
                   AppLocalizations.of(context)!.articleVisualisationViewQuantity,
-                  textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
-                      fontSize: largeTextSize, fontWeight: FontWeight.bold),
+                      fontSize: mediumTextSize, fontWeight: FontWeight.normal),
                 ),
                 NumberPicker(
                   value: quantitySelected,
@@ -101,7 +99,7 @@ class _ArticleVisualisationViewState extends State<ArticleVisualisationView> {
                     context: context,
                     barrierDismissible: false,
                     builder: (BuildContext context) {
-                      return const LoadingDialog(title: "Uploading change");
+                      return const LoadingDialog(title: "Buying...");
                     });
                 controller
                     .buyArticle(widget.data["id"], quantitySelected)
@@ -112,7 +110,7 @@ class _ArticleVisualisationViewState extends State<ArticleVisualisationView> {
                         });
                         Navigator.of(context).pop(true);
                         Navigator.popAndPushNamed(
-                            context, HomeSellerView.routeName);
+                            context, HomeBuyerView.routeName);
                       } else {
                         setState(() {
                           buttonState = ButtonState.error;

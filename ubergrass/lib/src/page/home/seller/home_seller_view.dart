@@ -161,7 +161,9 @@ class _HomeSellerViewState extends State<HomeSellerView> {
                 return const CreateArticleDialog();
               },
             ).then((value) {
-              Navigator.popAndPushNamed(context, HomeSellerView.routeName);
+              if (value) {
+                Navigator.popAndPushNamed(context, HomeSellerView.routeName);
+              }
             });
           },
         ),
