@@ -75,6 +75,8 @@ class RegisterService with ChangeNotifier {
           }).onError((error, stackTrace) {
             notifyListeners();
           });
+        } else {
+          notifyListeners();
         }
       } else {
         await _auth.verifyPhoneNumber(
@@ -114,6 +116,8 @@ class RegisterService with ChangeNotifier {
                 notifyListeners();
                 print(e);
               }
+            } else {
+              notifyListeners();
             }
           },
           codeAutoRetrievalTimeout: (e) {
