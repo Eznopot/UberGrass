@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(),
           darkTheme: ThemeData.dark(),
           themeMode: settingsController.themeMode,
-          initialRoute: "/register",
+          initialRoute: "/home_page_admin",
           onGenerateRoute: (RouteSettings routeSettings) {
             return MaterialPageRoute<void>(
               settings: routeSettings,

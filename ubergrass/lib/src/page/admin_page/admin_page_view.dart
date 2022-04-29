@@ -31,59 +31,104 @@ class _AdminPageViewState extends State<AdminPageView> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    const borderBase = Border(
+      right: BorderSide(
+        width: 1.0,
+        color: Color.fromARGB(255, 0, 0, 0),
+      ),
+    );
+
     return ExitWillPop(
       child: Scaffold(
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: CustomCenter(
-              padding: EdgeInsets.symmetric(vertical: size.height / 8),
-              child: Column(
-                children: <Widget>[
-                  CustomCenter(
-                    padding: EdgeInsets.symmetric(
-                        vertical: mediumMargin, horizontal: mediumMargin),
-                    child: CustomTextField(
-                      labelText: "enterFunctionName",
-                      controller: textEditingControllerFunctionName,
-                    ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: Container(
+                  color: const Color.fromARGB(255, 99, 156, 86),
+                  child: const Center(
+                    child: Text('ADMIN WEB CONSOLE'),
                   ),
-                  CustomCenter(
-                    padding: EdgeInsets.symmetric(
-                        vertical: mediumMargin, horizontal: mediumMargin),
-                    child: ProgressButton(
-                      child: Text(
-                        "Call function",
-                        style: GoogleFonts.montserrat(color: Colors.white),
-                      ),
-                      buttonState: buttonState,
-                      onPressed: () {
-                        setState(() {
-                          buttonState = ButtonState.inProgress;
-                        });
-                        controller
-                            .callCloudFunction(
-                                textEditingControllerFunctionName.text)
-                            .then((value) => {
-                                  setState(() {
-                                    result = value;
-                                  })
-                                });
-                      },
-                    ),
-                  ),
-                  CustomCenter(
-                    padding: EdgeInsets.symmetric(
-                        vertical: mediumMargin, horizontal: mediumMargin),
-                    child: Text(
-                      result,
-                      style: GoogleFonts.montserrat(color: Colors.white),
-                    ),
-                  ),
-                ],
+                ),
               ),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  color: const Color.fromARGB(255, 134, 134, 134),
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: const Color.fromARGB(50, 0, 0, 0))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            ContainerBorderWidget(inContainer: const Center(child: Text("User"))),
+                            ContainerBorderWidget(inContainer: const Center(child: Text("Groups"))),
+                            ContainerBorderWidget(inContainer: const Center(child: Text("Roles"))),
+                            ContainerBorderWidget(inContainer: const Center(child: Text("Rights"))),
+                            ContainerBorderWidget(flexSize: 4, inContainer: const Text("")),
+                          ],
+                        ),
+                      )),
+                ),
+              ),
+              Expanded(
+                flex: 20,
+                child: Container(
+                  color: const Color.fromARGB(255, 134, 134, 134),
+                  child: Row(
+                    children: <Widget>[
+                      ContainerBorderWidget(flexSize: 3, borderStyle: const Border(
+                        right : BorderSide(width: 1.0, color: Color.fromARGB(255, 0, 0, 0))),
+                      ),
+                      ContainerBorderWidget(flexSize: 10, borderStyle: const Border(
+                          right : BorderSide(width: 1.0, color: Color.fromARGB(255, 0, 0, 0))),
+                      ),
+                      ContainerBorderWidget(flexSize: 3, borderStyle: const Border(
+                          right : BorderSide(width: 1.0, color: Color.fromARGB(255, 0, 0, 0))),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ContainerBorderWidget extends StatelessWidget {
+  ContainerBorderWidget({
+    Key? key,
+    this.flexSize,
+    this.borderStyle,
+    this.inContainer,
+  }) : super(key: key);
+  int? flexSize;
+  Border? borderStyle;
+  Widget? inContainer;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: flexSize ?? 1,
+      child: Container(
+        decoration: BoxDecoration(
+          border: borderStyle ?? const Border(
+            right: BorderSide(
+              width: 1.0,
+              color: Color.fromARGB(255, 0, 0, 0),
             ),
           ),
         ),
+        child: inContainer ?? const Center(child: Text("Default Values")),
       ),
     );
   }
