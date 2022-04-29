@@ -103,7 +103,7 @@ exports.UserDelete = functions.auth.user().onDelete(async (data) => {
   const _Articles = db.collection("Articles")
       .where("CreateBy", "==", data.uid);
   debug([{key: 1, data: _Articles}, {key: 2, data: user},
-      {key: 3, data: data.uid}]);
+    {key: 3, data: data.uid}]);
   // deleteDoc(_Articles);
   await db.collection("Groups").doc(user.data().Groups).update({
     [`Who.${user.data().Roles.Type}`]: admin.firestore.FieldValue.
