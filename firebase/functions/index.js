@@ -89,16 +89,16 @@ exports.UserLogin = functions.auth.user().onCreate(async (usr) => {
   return true;
 });
 
-exports.UserDelete = functions.auth.user().onDelete(async (data, context) => {
+exports.UserDelete = functions.auth.user().onDelete(async (data) => {
   const _Articles = db.collection("Articles")
-      .where("CreateBy", "array-contains", context.auth.uid);
+      .where("CreateBy", "array-contains", data.uid);
   deleteDoc(_Articles);
-  const _User = db.collection("Users").doc(context.auth.uid);
+  const _User = db.collection("Users").doc(data.uid);
   const user = await _User.get();
 
   db.collection("Groups").doc(user.data().Groups).update({
-    [`Who.${usr.Roles.Type}`]: admin.firestore.FieldValue.
-        arrayRemove(context.auth.uid),
+    [`Who.${user.data().Roles.Type}`]: admin.firestore.FieldValue.
+        arrayRemove(data.uid),
   });
   user.delete();
   return true;
@@ -200,17 +200,11 @@ exports.getArticlesInGroup = functions.https.onCall(async (data, context) => {
   const _Groups = db.collection("Groups").doc(usr.data().Groups);
   const group = await _Groups.get();
   const _idSeller = await group.data().Who.Seller;
-  const Articles = [];
-
-  _idSeller.forEach(async (id) => {
-    const mapA = await db.collection("Articles").where("CreateBy", "==", id);
-    const md = await mapA.get();
-
-    Articles.push({data: md.data(), id: md.id});
-  });
+  const mapA = await db.collection("Articles")
+      .where("CreateBy", "in", _idSeller).get();
 
   return await selectInArray(
-      await createMappingDataId(Articles),
+      await createMappingDataId(mapA),
       data.start,
       data.end);
 });
@@ -233,19 +227,16 @@ exports.buyArticles = functions.https.onCall(async (data, context) => {
     return;
   }
 
-  const docArtocle = db.collection("Articles").doc(data.id);
-  const art = await docArtocle.get();
-
+  const art = await db.collection("Articles").doc(data.id).get();
   const Ordered = {
     Articles: data.id,
     Buyer: context.auth.uid,
     Quantity: data.quantity,
     Seller: art.data().CreateBy,
-    Time: new Date().now(),
+    Time: new Date().getDate().toString(),
   };
 
   await db.collection("Ordered").add(Ordered);
-
   return true;
 });
 
@@ -254,8 +245,8 @@ exports.buyArticles = functions.https.onCall(async (data, context) => {
 exports.getRoles = functions.https.onCall(async () => {
   const Roles = await db.collection("Roles")
       .where("Display", "==", true).get();
-  const map = [];
 
+  const map = [];
   Roles.forEach((doc) => {
     map.push(doc.data());
   });
@@ -278,4 +269,5 @@ async function getMyRight(context, rw, obj) {
 /* Ordered Functions */
 
 exports.getOrdered = functions.https.onCall(async (data, context) => {
+
 });
