@@ -14,7 +14,6 @@ class CompleteInformationService {
       "name" : name,
       "email" : email
     });
-
     if (response.data != null) {
       return 0;
     }

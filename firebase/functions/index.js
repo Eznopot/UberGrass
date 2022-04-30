@@ -88,27 +88,20 @@ exports.UserLogin = functions.auth.user().onCreate(async (usr) => {
   return true;
 });
 
-async function debug(debug) {
-  db.collection("debug").doc("debug").set({});
-  debug.forEach((a) => {
-    db.collection("debug").doc("debug").update({
-      [a.key]: a.data,
-    });
-  });
-}
-
 exports.UserDelete = functions.auth.user().onDelete(async (data) => {
   const _user = db.collection("Users").doc(data.uid);
   const user = await _user.get();
-  const _Articles = db.collection("Articles")
-      .where("CreateBy", "==", data.uid);
-  debug([{key: 1, data: _Articles}, {key: 2, data: user},
-    {key: 3, data: data.uid}]);
-  // deleteDoc(_Articles);
+  const _Articles = await db.collection("Articles")
+      .where("CreateBy", "==", data.uid).get();
+  _Articles.forEach((doc) => {
+    doc.ref.delete();
+  });
+
   await db.collection("Groups").doc(user.data().Groups).update({
     [`Who.${user.data().Roles.Type}`]: admin.firestore.FieldValue.
         arrayRemove(data.uid),
   });
+
   await _user.delete();
   return true;
 });
@@ -127,7 +120,7 @@ exports.setUsers = functions.https.onCall(async (data, context) => {
     [`Who.${_Roles.data.Type}`]: admin.firestore.FieldValue
         .arrayUnion(context.auth.uid),
   });
-  await db.collection("Users").doc(context.auth.uid).set({
+  return await db.collection("Users").doc(context.auth.uid).set({
     Groups: _Groups.uid,
     Pages: _Pages.uid,
     Roles: _Roles.uid,
@@ -136,7 +129,6 @@ exports.setUsers = functions.https.onCall(async (data, context) => {
     Name: data.name,
     Email: data.email,
   });
-  return;
 });
 
 /* "My" Functions */
