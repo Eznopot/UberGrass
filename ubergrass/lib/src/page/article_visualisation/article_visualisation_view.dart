@@ -7,6 +7,7 @@ import '../../constant/size.dart';
 import '../../widget/widget/dialog/loading_dialog.dart';
 import '../home/buyer/home_buyer_view.dart';
 import '../home/seller/home_seller_view.dart';
+import '../select_address/select_adress_view.dart';
 import 'article_visualisation_controller.dart';
 
 class ArticleVisualisationView extends StatefulWidget {
@@ -25,6 +26,36 @@ class _ArticleVisualisationViewState extends State<ArticleVisualisationView> {
   ButtonState buttonState = ButtonState.normal;
   String buttonString = "";
   int quantitySelected = 1;
+
+
+  void buyArticle(String address) {
+    setState(() {
+      buttonState = ButtonState.inProgress;
+    });
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const LoadingDialog(title: "Buying...");
+        });
+    controller
+        .buyArticle(widget.data["id"], quantitySelected, address)
+        .then((value) {
+      if (value) {
+        setState(() {
+          buttonState = ButtonState.normal;
+        });
+        Navigator.of(context).pop(true);
+        Navigator.popAndPushNamed(
+            context, HomeBuyerView.routeName);
+      } else {
+        setState(() {
+          buttonState = ButtonState.error;
+        });
+        Navigator.of(context).pop(true);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,31 +123,10 @@ class _ArticleVisualisationViewState extends State<ArticleVisualisationView> {
                 buttonString,
                 style: GoogleFonts.montserrat(color: Colors.white),
               ), onPressed: () {
-                setState(() {
-                  buttonState = ButtonState.inProgress;
-                });
-                showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) {
-                      return const LoadingDialog(title: "Buying...");
-                    });
-                controller
-                    .buyArticle(widget.data["id"], quantitySelected)
-                    .then((value) {
-                      if (value) {
-                        setState(() {
-                          buttonState = ButtonState.normal;
-                        });
-                        Navigator.of(context).pop(true);
-                        Navigator.popAndPushNamed(
-                            context, HomeBuyerView.routeName);
-                      } else {
-                        setState(() {
-                          buttonState = ButtonState.error;
-                        });
-                        Navigator.of(context).pop(true);
-                      }
+                Navigator.pushNamed(context, SelectAddressView.routeName).then((value) {
+                  if (value != null && value.toString().isNotEmpty) {
+                    buyArticle(value as String);
+                  }
                 });
               }),
             ],

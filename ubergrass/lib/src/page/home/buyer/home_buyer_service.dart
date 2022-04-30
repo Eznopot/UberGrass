@@ -9,6 +9,7 @@ class HomeBuyerService {
       "start" : start, 
       "end" : end,
     });
+    print("data: " + response.data.toString());
     if (response.data == null || response.data.length == 0) {
       return null;
     }
@@ -16,7 +17,7 @@ class HomeBuyerService {
     for (dynamic elem in response.data) {
       res.add({"data" : elem["data"], "id" : elem["id"]});
     }
-    print(res.length);
+    print("lenght===>" + res.length.toString());
     return res;
   }
 }
