@@ -5,8 +5,7 @@ import '../../../constant/size.dart';
 import '../../../widget/widget/dialog/create_article_dialog/create_article_dialog_widget.dart';
 import '../../../widget/widget/dialog/exit_will_pop.dart';
 import '../../../widget/widget/drawer.dart';
-import '../../../widget/widget/list/list_builder.dart';
-import '../../../widget/widget/placement/custom_center.dart';
+import '../../../widget/widget/list/listArticle/list_builder.dart';
 import '../../edit_article/edit_article_view.dart';
 import 'home_seller_controller.dart';
 

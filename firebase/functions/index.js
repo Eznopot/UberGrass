@@ -208,23 +208,14 @@ exports.getArticlesInGroup = functions.https.onCall(async (data, context) => {
   const _Groups = db.collection("Groups").doc(usr.data().Groups);
   const group = await _Groups.get();
   const _idSeller = await group.data().Who.Seller;
-  const arrArt = [];
 
-  for (const elem of _idSeller) {
-    arrArt.push(db.collection("Articles")
-        .where("CreateBy", "==", elem).get());
-  }
-
-  await Promise.all(arrArt);
-  return arrArt;
-  /*
   const mapA = await db.collection("Articles")
-      .where("CreateBy", "in", _idSeller).get();*/
+      .where("CreateBy", "in", _idSeller).get();
 
-  /* return await selectInArray(
-      await createMappingDataId(arrArt),
+  return await selectInArray(
+      await createMappingDataId(mapA),
       data.start,
-      data.end); */
+      data.end);
 });
 
 exports.getArticles = functions.https.onCall(async (data, context) => {
@@ -257,6 +248,28 @@ exports.buyArticles = functions.https.onCall(async (data, context) => {
 
   await db.collection("Ordered").add(Ordered);
   return true;
+});
+
+/* Order Functions */
+
+exports.getOrderInGroup = functions.https.onCall(async (data, context) => {
+  if (!getMyRight(context, "Read", "Ordered")) {
+    return;
+  }
+
+  const docUser = db.collection("Users").doc(context.auth.uid);
+  const usr = await docUser.get();
+  const _Groups = db.collection("Groups").doc(usr.data().Groups);
+  const group = await _Groups.get();
+  const _idSeller = await group.data().Who.Seller;
+
+  const mapA = await db.collection("Ordered")
+      .where("CreateBy", "in", _idSeller).get();
+
+  return await selectInArray(
+      await createMappingDataId(mapA),
+      data.start,
+      data.end);
 });
 
 /* Roles Functions */

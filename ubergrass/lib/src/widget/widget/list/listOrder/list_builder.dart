@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../dialog/loading_dialog.dart';
 import 'list_element.dart';
 
-class ListBuilder extends StatelessWidget {
-  ListBuilder(
+class ListBuilderOrder extends StatelessWidget {
+  ListBuilderOrder(
       {Key? key,
       required this.list,
       required this.animation,
@@ -28,7 +27,7 @@ class ListBuilder extends StatelessWidget {
         begin: const Offset(-1, 0),
         end: const Offset(0, 0),
       ).animate(animation),
-      child: ListElement(
+      child: ListElementOrder(
         map: list[position]["data"],
         maxChar: 20,
         scrollController: scrollController,

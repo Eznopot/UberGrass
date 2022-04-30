@@ -4,22 +4,22 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../constant/size.dart';
 import '../../../widget/widget/dialog/exit_will_pop.dart';
 import '../../../widget/widget/drawer.dart';
-import '../../../widget/widget/list/listArticle/list_builder.dart';
+import '../../../widget/widget/list/listOrder/list_builder.dart';
 import '../../article_visualisation/article_visualisation_view.dart';
-import 'home_buyer_controller.dart';
+import 'home_delivery_controller.dart';
 
-class HomeBuyerView extends StatefulWidget {
-  const HomeBuyerView({Key? key}) : super(key: key);
-  static const String routeName = "/home_page_buyer";
+class HomeDeliveryView extends StatefulWidget {
+  const HomeDeliveryView({Key? key}) : super(key: key);
+  static const String routeName = "/home_page_delivery";
   @override
-  State<HomeBuyerView> createState() => _HomeBuyerViewState();
+  State<HomeDeliveryView> createState() => _HomeDeliveryViewState();
 }
 
-class _HomeBuyerViewState extends State<HomeBuyerView> {
+class _HomeDeliveryViewState extends State<HomeDeliveryView> {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
   final ScrollController scrollController = ScrollController();
-  HomeBuyerController controller = HomeBuyerController();
+  HomeDeliveryController controller = HomeDeliveryController();
   List<dynamic>? list;
   bool isInserted = true;
 
@@ -116,7 +116,7 @@ class _HomeBuyerViewState extends State<HomeBuyerView> {
                             shrinkWrap: true,
                             initialItemCount: list?.length ?? 0,
                             itemBuilder: (context, index, animation) {
-                              return ListBuilder(
+                              return ListBuilderOrder(
                                   position: index,
                                   animation: animation,
                                   list: list!,
