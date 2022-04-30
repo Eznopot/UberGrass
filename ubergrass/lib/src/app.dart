@@ -8,6 +8,7 @@ import 'package:ubergrass/src/page/edit_article/edit_article_view.dart';
 import 'package:ubergrass/src/page/home/buyer/home_buyer_view.dart';
 import 'package:ubergrass/src/page/home/seller/home_seller_view.dart';
 import 'package:ubergrass/src/page/register/register_view.dart';
+import 'package:ubergrass/src/page/select_address/select_adress_view.dart';
 import 'package:ubergrass/src/page/settings/settings_controller.dart';
 import 'package:ubergrass/src/page/settings/settings_view.dart';
 class MyApp extends StatelessWidget {
@@ -55,6 +56,8 @@ class MyApp extends StatelessWidget {
                     return const HomeSellerView();
                   case HomeBuyerView.routeName:
                     return const HomeBuyerView();
+                  case SelectAddressView.routeName:
+                    return SelectAddressView();
                   case EditArticleView.routeName:
                     if (routeSettings.arguments != null) {
                       return EditArticleView(data: routeSettings.arguments);

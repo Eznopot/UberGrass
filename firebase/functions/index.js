@@ -120,6 +120,12 @@ exports.setUsers = functions.https.onCall(async (data, context) => {
     [`Who.${_Roles.data.Type}`]: admin.firestore.FieldValue
         .arrayUnion(context.auth.uid),
   });
+
+  let address = "";
+  if (data.rolesType == "Seller") {
+    address = data.address;
+  }
+
   return await db.collection("Users").doc(context.auth.uid).set({
     Groups: _Groups.uid,
     Pages: _Pages.uid,
@@ -128,6 +134,7 @@ exports.setUsers = functions.https.onCall(async (data, context) => {
     Status: "Complete",
     Name: data.name,
     Email: data.email,
+    Address: address,
   });
 });
 
@@ -201,13 +208,23 @@ exports.getArticlesInGroup = functions.https.onCall(async (data, context) => {
   const _Groups = db.collection("Groups").doc(usr.data().Groups);
   const group = await _Groups.get();
   const _idSeller = await group.data().Who.Seller;
-  const mapA = await db.collection("Articles")
-      .where("CreateBy", "in", _idSeller).get();
+  const arrArt = [];
 
-  return await selectInArray(
-      await createMappingDataId(mapA),
+  for (const elem of _idSeller) {
+    arrArt.push(db.collection("Articles")
+        .where("CreateBy", "==", elem).get());
+  }
+
+  await Promise.all(arrArt);
+  return arrArt;
+  /*
+  const mapA = await db.collection("Articles")
+      .where("CreateBy", "in", _idSeller).get();*/
+
+  /* return await selectInArray(
+      await createMappingDataId(arrArt),
       data.start,
-      data.end);
+      data.end); */
 });
 
 exports.getArticles = functions.https.onCall(async (data, context) => {
@@ -234,6 +251,7 @@ exports.buyArticles = functions.https.onCall(async (data, context) => {
     Buyer: context.auth.uid,
     Quantity: data.quantity,
     Seller: art.data().CreateBy,
+    Address: data.address,
     Time: new Date().getDate().toString(),
   };
 

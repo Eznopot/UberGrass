@@ -11,6 +11,7 @@
 
   "completeTitle" : "Complete your information",
   "completeCity" : "City:",
+  "completeAddress" : "Select your address",
   "completeRole" : "Role:",
   "nameInputTextLabel" : "Name",
   "emailInputTextLabel" : "Email",
@@ -32,4 +33,6 @@
 
   "articleVisualisationViewTitle" : "Buy !",
   "articleVisualisationViewQuantity" : "Quantity :"
+
+
 }

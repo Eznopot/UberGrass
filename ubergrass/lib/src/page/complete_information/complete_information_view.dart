@@ -7,6 +7,7 @@ import '../../constant/size.dart';
 import '../../widget/widget/dialog/exit_will_pop.dart';
 import '../../widget/widget/dialog/transition_dialog/transition_dialog_widget.dart';
 import '../../widget/widget/placement/custom_center.dart';
+import '../select_address/select_adress_view.dart';
 import 'complete_information_controller.dart';
 
 class CompleteInformationView extends StatefulWidget {
@@ -25,6 +26,7 @@ class _CompleteInformationViewState extends State<CompleteInformationView> {
   CompleteInformationController controller = CompleteInformationController();
   TextEditingController textEditingControllerName = TextEditingController();
   TextEditingController textEditingControllerEmail = TextEditingController();
+  TextEditingController textEditingControllerAddress = TextEditingController();
   ButtonState buttonState = ButtonState.normal;
 
   @override
@@ -146,6 +148,16 @@ class _CompleteInformationViewState extends State<CompleteInformationView> {
                         }),
                       ),
                       SizedBox(height: mediumMargin),
+                      role.isNotEmpty && role[roleSelected] == "Seller" ? CustomTextField(
+                          labelText:
+                          AppLocalizations.of(context)!.completeAddress,
+                          onTap: () {
+                            Navigator.pushNamed(context, SelectAddressView.routeName).then((value) {
+                              textEditingControllerAddress.text = value as String;
+                            });
+                          },
+                          controller: textEditingControllerAddress,
+                        ): Container(),
                       CustomCenter(
                         padding: EdgeInsets.symmetric(
                             vertical: mediumMargin, horizontal: mediumMargin),
@@ -160,7 +172,7 @@ class _CompleteInformationViewState extends State<CompleteInformationView> {
                               setState(() {
                                 buttonState = ButtonState.inProgress;
                               });
-                              controller.updateInformations(textEditingControllerEmail.text, textEditingControllerName.text, role[roleSelected], dropdownValue).then((value) {
+                              controller.updateInformations(textEditingControllerEmail.text, textEditingControllerName.text, role[roleSelected], dropdownValue, textEditingControllerAddress.text).then((value) {
                                 if (value == 0) {
                                   setState(() {
                                     buttonState = ButtonState.normal;

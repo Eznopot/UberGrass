@@ -79,9 +79,9 @@ class _EditArticleViewState extends State<EditArticleView> {
             ],
           ),
         ),
-        floatingActionButton: IconButton(
-          color: Colors.greenAccent,
-          icon: const Icon(Icons.edit),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.green,
+          child: const Icon(Icons.edit, color: Colors.white),
           onPressed: () {
             showDialog(
                 context: context,
