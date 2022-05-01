@@ -35,6 +35,7 @@ class _HomeSellerViewState extends State<HomeSellerView> {
 
   removeArticle(int index) {
     if (list != null) {
+      controller.removeArticles(list![index]["id"]);
       listKey.currentState?.removeItem(
           index,
           (_, animation) => ListBuilder(

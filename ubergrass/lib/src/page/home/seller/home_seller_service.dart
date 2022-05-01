@@ -18,4 +18,13 @@ class HomeSellerService {
     }
     return res;
   }
+
+  Future<bool> removeArticles(String id) async {
+    FirebaseFunctions function = FirebasePackage.getFunction();
+    HttpsCallable callable = function.httpsCallable("removeArticle");
+    final response = await callable.call({
+      "id" : id,
+    });
+    return true;
+  }
 }

@@ -306,6 +306,15 @@ exports.buyArticles = functions.https.onCall(async (data, context) => {
   return true;
 });
 
+exports.removeArticle = functions.https.onCall(async (data, context) => {
+  if (!getMyRight(context, "Write", "Articles")) {
+    return;
+  }
+  await db.collection("Articles").doc(data.id).delete();
+  return true;
+});
+
+
 /* Order Functions */
 function getDistance(addressSrc, addressDest) {
   return new Promise((resolve, reject) => {
