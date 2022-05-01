@@ -301,6 +301,20 @@ exports.buyArticles = functions.https.onCall(async (data, context) => {
 });
 
 /* Order Functions */
+function getDistance(addressSrc, addressDest) {
+  return new Promise((resolve, reject) => {
+    distance.get({
+      origin: addressSrc,
+      destination: addressDest,
+    }, function(err, data) {
+      if (err) {
+        return console.log(err);
+      } else {
+        resolve(data.duration);
+      }
+    });
+  });
+}
 
 exports.getOrderInGroup = functions.https.onCall(async (data, context) => {
   if (!getMyRight(context, "Read", "Ordered")) {
@@ -315,52 +329,35 @@ exports.getOrderInGroup = functions.https.onCall(async (data, context) => {
   const mapA = await db.collection("Ordered")
       .where("Seller", "in", _idSeller).get();
 
-  let mapSeller = [];
+  let arrSeller = [];
+  let arrArticle = [];
+  const mapRes = [];
+  const res = [];
   mapA.forEach((m) => {
     const Seller = db.collection("Users").doc(m.data().Seller).get();
-    mapSeller.push({
-      Seller: Seller,
-      Quantity: m.data().quantity,
-      Address_Buyer: m.data().Address,
+    const Article = db.collection("Articles").doc(m.data().Articles).get();
+    arrSeller.push(Seller);
+    arrArticle.push(Article);
+    mapRes.push({
+      Address: m.data().Address,
+      Quantity: m.data().Quantity,
+      id: m.id,
     });
   });
-  mapSeller = await Promise.all(mapSeller);
-  // mapSeller.forEach((m) => {
-  //   m.Seller = m.Seller.data().Address;
-  // });
-  return mapSeller;
-  // let mapSeller = [];
-  // mapA.forEach((m) => {
-  //   const Sellers = db.collection("Users").doc(m.data().Seller).get();
-  //   mapSeller.push(Sellers);
-  // });
-  // mapSeller = await Promise.all(mapSeller);
-
-  // let map = [];
-  // for (let index = 0; index < mapA.length; index++) {
-  //   const m = mapA[index];
-  //   const Sellers = mapSeller[index].data();
-  //   const _distance = distance.get({
-  //     origin: Sellers.data().Address,
-  //     destination: m.data().Address,
-  //   }, (err, data) => {
-  //     return (data);
-  //   });
-
-  //   map.push({
-  //     Address_Seller: Sellers.data().Address,
-  //     Quantity: m.data().Quantity,
-  //     Address_Buyer: m.data().Address,
-  //     distanceTime: _distance,
-  //   });
-  // }
-  // map = await Promise.all(map);
-  // return (map);
-  // return (map);
-  // return await selectInArray(
-  //     await createMappingDataId(mapA),
-  //     data.start,
-  //     data.end);
+  arrSeller = await Promise.all(arrSeller);
+  arrArticle = await Promise.all(arrArticle);
+  for (let i = 0; i < arrSeller.length; i++) {
+    res.push({
+      Address_Buyer: mapRes[i].Address,
+      Quantity: mapRes[i].Quantity,
+      Distance: await getDistance(mapRes[i].Address,
+          arrSeller[i].data().Address),
+      Address_Seller: arrSeller[i].data().Address,
+      Name: arrArticle[i].data().Name,
+      id: mapRes[i].id,
+    });
+  }
+  return res;
 });
 
 /* Roles Functions */

@@ -23,12 +23,11 @@ class _RegisterViewState extends State<RegisterView> {
   TextEditingController textEditingControllerTelephone =
       TextEditingController();
   ButtonState buttonState = ButtonState.normal;
+  bool disposing = false;
 
   void process(BuildContext context) {
-    controller.removeListener(() {
-      process(context);
-    });
-    if (controller.connected) {
+    if (controller.connected && !disposing) {
+      disposing = true;
       controller.userCompleted().then((value) {
         if (value) {
           showDialog(

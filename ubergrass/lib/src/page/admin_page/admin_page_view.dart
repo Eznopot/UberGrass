@@ -148,9 +148,7 @@ class modifyData extends StatelessWidget {
                               BorderSide(width: 1.0, color: Color(0xFF000000)),
                         ),
                         inContainer: Center(
-                          child: WriteData()
-                          }
-                          ),
+                          child: WriteData(controller: controller,),
                         ),
                       ),
                     ],
@@ -171,7 +169,7 @@ class WriteData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
+    return Container();
   }
 }
 

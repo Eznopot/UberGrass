@@ -9,7 +9,6 @@ class HomeBuyerService {
       "start" : start, 
       "end" : end,
     });
-    print("data: " + response.data.toString());
     if (response.data == null || response.data.length == 0) {
       return null;
     }

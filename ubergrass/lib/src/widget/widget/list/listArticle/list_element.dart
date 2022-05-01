@@ -7,7 +7,7 @@ class ListElement extends StatelessWidget {
     required this.map,
     required this.maxChar,
     required this.position,
-    required this.onPressDelete,
+    this.onPressDelete,
     required this.onPressCard,
     required this.scrollController,
   }) : super(key: key);
@@ -15,7 +15,7 @@ class ListElement extends StatelessWidget {
   final dynamic map;
   final int maxChar;
   final int position;
-  final VoidCallback onPressDelete;
+  final VoidCallback? onPressDelete;
   final VoidCallback onPressCard;
   final ScrollController scrollController;
 
@@ -49,10 +49,10 @@ class ListElement extends StatelessWidget {
                       ],
                     ),
                   ),
-                  IconButton(
+                  onPressDelete != null ? IconButton(
                     onPressed: onPressDelete,
                     icon: const Icon(Icons.delete),
-                  ),
+                  ) : Container(),
                 ],
               ),
               Row(
