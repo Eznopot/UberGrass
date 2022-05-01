@@ -24,29 +24,86 @@ class AdminPageService {
     }
     List<dynamic> res = [];
     for (dynamic elem in response.data) {
-      res.add({"id" : elem["id"]});
+      res.add({"id": elem["id"]});
     }
     return res;
   }
 
-  Future<List<dynamic>?> GetRefDocOfCollections(String DocName) async {
+  Future<List<dynamic>?> GetRefDocOfCollections(
+    String DocName,
+  ) async {
     FirebaseFunctions function = FirebasePackage.getFunction();
     var httpsCallable = function.httpsCallable("GetAllDocOfCollection");
-    final response = await httpsCallable.call({"docName": DocName,});
+    final response = await httpsCallable.call({
+      "docName": DocName,
+    });
     if (response.data == null || response.data.length == 0) {
       return null;
     }
     List<dynamic> res = [];
     for (dynamic elem in response.data) {
-      res.add({"id" : elem["id"]});
+      res.add({"id": elem["id"]});
     }
     return res;
   }
 
-  Future<dynamic> GetDocFromCall(String callName, String docName) async {
+  Future<dynamic> GetDocFromCall(
+    String callName,
+    String docName,
+  ) async {
     FirebaseFunctions function = FirebasePackage.getFunction();
     var httpsCallable = function.httpsCallable("GetDocFromCall");
-    final response = await httpsCallable.call({"docName": docName, "callName": callName,});
+    final response = await httpsCallable.call({
+      "docName": docName,
+      "callName": callName,
+    });
+    if (response.data == null) {
+      return null;
+    }
+    return response.data;
+  }
+
+  Future<void> SetDataFromDocColl(
+    String callName,
+    String docName,
+    String Key,
+    dynamic value,
+  ) async {
+    FirebaseFunctions function = FirebasePackage.getFunction();
+    var httpsCallable = function.httpsCallable("SetDataFromDocColl");
+    final response = await httpsCallable.call({
+      "docName": docName,
+      "callName": callName,
+      "key": Key,
+      "value": value,
+    });
+    if (response.data == null) {
+      return null;
+    }
+    return response.data;
+  }
+  Future<dynamic> deleteFromDocColl(
+      String callName,
+      String docName,
+      ) async {
+    FirebaseFunctions function = FirebasePackage.getFunction();
+    var httpsCallable = function.httpsCallable("deleteFromDocColl");
+    final response = await httpsCallable.call({
+      "docName": docName,
+      "callName": callName,
+    });
+    if (response.data == null) {
+      return null;
+    }
+    return response.data;
+  }
+
+  Future<void> CreateFromDocColl(String docName) async {
+    FirebaseFunctions function = FirebasePackage.getFunction();
+    var httpsCallable = function.httpsCallable("CreateFromDocColl");
+    final response = await httpsCallable.call({
+      "callName": docName,
+    });
     if (response.data == null) {
       return null;
     }

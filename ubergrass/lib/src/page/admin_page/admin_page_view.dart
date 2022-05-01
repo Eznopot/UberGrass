@@ -1,4 +1,7 @@
+import 'dart:html';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -47,65 +50,174 @@ class _AdminPageViewState extends State<AdminPageView> {
       ),
     );
 
-    return ExitWillPop(
-      child: Scaffold(
-        body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: Container(
-                  color: const Color.fromARGB(255, 99, 156, 86),
-                  child: const Center(
-                    child: Text('ADMIN WEB CONSOLE'),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  color: const Color.fromARGB(255, 134, 134, 134),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: const Color.fromARGB(50, 0, 0, 0))),
-                        child: PrintCollection(
-                          controller: controller,
-                        )),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 20,
-                child: Container(
-                  color: const Color.fromARGB(255, 134, 134, 134),
-                  child: Row(
-                    children: <Widget>[
-                      ContainerBorderWidget(
-                          flexSize: 3,
-                          inContainer: PrintDocuments(
-                            controller: controller,
-                          )),
-                      ContainerBorderWidget(
-                        flexSize: 10,
-                        inContainer: modifyData(controller: controller),
+    return kIsWeb
+        ? ExitWillPop(
+            child: Scaffold(
+              body: SafeArea(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        color: const Color.fromARGB(255, 99, 156, 86),
+                        child: const Center(
+                          child: Text('ADMIN WEB CONSOLE'),
+                        ),
                       ),
-                      ContainerBorderWidget(
-                        flexSize: 5,
-                        inContainer: PrintData(controller: controller),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        color: const Color.fromARGB(255, 134, 134, 134),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color.fromARGB(50, 0, 0, 0),
+                              ),
+                            ),
+                            child: ContainerBorderWidget(
+                              flexSize: 10,
+                              inContainer: PrintCollection(
+                                controller: controller,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                    Expanded(
+                      flex: 20,
+                      child: Container(
+                        color: const Color.fromARGB(255, 134, 134, 134),
+                        child: Row(
+                          children: <Widget>[
+                            ContainerBorderWidget(
+                              flexSize: 3,
+                              inContainer: Column(
+                                children: <Widget>[
+                                  ContainerBorderWidget(
+                                    flexSize: 20,
+                                    inContainer: PrintDocuments(
+                                      controller: controller,
+                                    ),
+                                  ),
+                                  ContainerBorderWidget(
+                                    inContainer: Center(
+                                      child: CustomSimpleButton(
+                                        child: const Center(child: Text(" + ")),
+                                        onPress: () {
+                                          controller.CreateFromDocColl(
+                                              controller.Collection);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ContainerBorderWidget(
+                              flexSize: 10,
+                              inContainer: Column(
+                                children: <Widget>[
+                                  ContainerBorderWidget(
+                                    flexSize: 20,
+                                    inContainer:
+                                        modifyData(controller: controller),
+                                  ),
+                                  ContainerBorderWidget(
+                                    inContainer: Row(
+                                      children: <Widget>[
+                                        ContainerBorderWidget(
+                                          inContainer: const Text("  Key : "),
+                                          borderStyle: const Border(
+                                            bottom: BorderSide(
+                                              width: 1.0,
+                                              color: Color(0x00000000),
+                                            ),
+                                          ),
+                                        ),
+                                        ContainerBorderWidget(
+                                          borderStyle: const Border(
+                                            bottom: BorderSide(
+                                              width: 1.0,
+                                              color: Color(0x00000000),
+                                            ),
+                                          ),
+                                          flexSize: 2,
+                                          inContainer: CustomTextField(
+                                            changed: (data) {
+                                              controller.dKey = data;
+                                            },
+                                          ),
+                                        ),
+                                        ContainerBorderWidget(
+                                          inContainer: const Text("  Value : "),
+                                          borderStyle: const Border(
+                                            bottom: BorderSide(
+                                              width: 1.0,
+                                              color: Color(0x00000000),
+                                            ),
+                                          ),
+                                        ),
+                                        ContainerBorderWidget(
+                                          flexSize: 5,
+                                          borderStyle: const Border(
+                                            bottom: BorderSide(
+                                              width: 1.0,
+                                              color: Color(0x00000000),
+                                            ),
+                                          ),
+                                          inContainer: CustomTextField(
+                                            changed: (data) {
+                                              controller.ChangesData[
+                                                  controller.dKey ??
+                                                      "NUll"] = data;
+                                            },
+                                          ),
+                                        ),
+                                        ContainerBorderWidget(
+                                          borderStyle: const Border(
+                                            bottom: BorderSide(
+                                              width: 1.0,
+                                              color: Color(0x00000000),
+                                            ),
+                                          ),
+                                          flexSize: 1,
+                                          inContainer: Center(
+                                            child: CustomSimpleButton(
+                                              child: const Text(" + "),
+                                              onPress: () {
+                                                controller.SetDataFromDocColl(
+                                                    controller.dKey ?? "NULL");
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ContainerBorderWidget(
+                              flexSize: 5,
+                              inContainer: PrintData(controller: controller),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          )
+        : const Center(
+            child: Text("Only Web"),
+          );
   }
 }
 
@@ -127,10 +239,12 @@ class modifyData extends StatelessWidget {
                   child: Row(
                     children: <Widget>[
                       ContainerBorderWidget(
-                        flexSize: 1,
+                        flexSize: 8,
                         borderStyle: const Border(
-                          bottom:
-                              BorderSide(width: 1.0, color: Color(0xFF000000)),
+                          bottom: BorderSide(
+                            width: 1.0,
+                            color: Color(0xFF000000),
+                          ),
                         ),
                         inContainer: Center(
                           child: Text(
@@ -142,15 +256,73 @@ class modifyData extends StatelessWidget {
                         ),
                       ),
                       ContainerBorderWidget(
-                        flexSize: 4,
+                        flexSize: 32,
                         borderStyle: const Border(
-                          bottom:
-                              BorderSide(width: 1.0, color: Color(0xFF000000)),
+                          bottom: BorderSide(
+                            width: 1.0,
+                            color: Color(0xFF000000),
+                          ),
                         ),
                         inContainer: Center(
-                          child: WriteData()
-                          }
+                          child: WriteData(
+                            controller: controller,
+                            data: controller.AllData!.entries
+                                .toList()[index]
+                                .value,
+                            KKey:
+                                controller.AllData!.entries.toList()[index].key,
                           ),
+                        ),
+                      ),
+                      ContainerBorderWidget(
+                        borderStyle: const Border(
+                          bottom: BorderSide(
+                            width: 1.0,
+                            color: Color(0xFF000000),
+                          ),
+                        ),
+                        inContainer: const Center(
+                          child: Text(""),
+                        ),
+                      ),
+                      ContainerBorderWidget(
+                        flexSize: 2,
+                        borderStyle: const Border(
+                          bottom: BorderSide(
+                            width: 1.0,
+                            color: Color(0xFF000000),
+                          ),
+                        ),
+                        inContainer: Center(
+                          child: CustomSimpleButton(
+                            onPress: () {
+                              controller.SetDataFromDocColl(controller
+                                      .AllData!.entries
+                                      .toList()[index]
+                                      .key
+                                      .toString())
+                                  .then((_) {
+                                controller.GetDocFromCall(
+                                  controller.Collection,
+                                  controller.Document,
+                                );
+                              });
+                            },
+                            child: const Text(
+                              "  +  ",
+                            ),
+                          ),
+                        ),
+                      ),
+                      ContainerBorderWidget(
+                        borderStyle: const Border(
+                          bottom: BorderSide(
+                            width: 1.0,
+                            color: Color(0xFF000000),
+                          ),
+                        ),
+                        inContainer: const Center(
+                          child: Text(""),
                         ),
                       ),
                     ],
@@ -159,19 +331,30 @@ class modifyData extends StatelessWidget {
               );
             }),
           )
-        : const Text("Empty");
+        : const Center(child: Text("Empty"));
   }
 }
+
 class WriteData extends StatelessWidget {
   WriteData({
     Key? key,
+    required this.KKey,
     required this.controller,
+    required this.data,
   }) : super(key: key);
   AdminPageController controller;
+  dynamic data;
+  String KKey;
 
   @override
   Widget build(BuildContext context) {
-    return
+    return data is String
+        ? CustomTextField(
+            changed: (data) {
+              controller.ChangesData[KKey] = data;
+            },
+          )
+        : Text(data.toString());
   }
 }
 
@@ -196,27 +379,14 @@ class PrintData extends StatelessWidget {
                       ContainerBorderWidget(
                         flexSize: 1,
                         borderStyle: const Border(
-                          right:
-                              BorderSide(width: 1.0, color: Color(0xFF000000)),
-                          bottom:
-                              BorderSide(width: 1.0, color: Color(0xFF000000)),
-                        ),
-                        inContainer: Center(
-                          child: Text(
-                            controller.AllData!.entries
-                                .toList()[index]
-                                .key
-                                .toString(),
+                          right: BorderSide(
+                            width: 1.0,
+                            color: Color(0xFF000000),
                           ),
-                        ),
-                      ),
-                      ContainerBorderWidget(
-                        flexSize: 4,
-                        borderStyle: const Border(
-                          right:
-                              BorderSide(width: 1.0, color: Color(0xFF000000)),
-                          bottom:
-                              BorderSide(width: 1.0, color: Color(0xFF000000)),
+                          bottom: BorderSide(
+                            width: 1.0,
+                            color: Color(0xFF000000),
+                          ),
                         ),
                         inContainer: Center(
                           child: Text(
@@ -233,7 +403,7 @@ class PrintData extends StatelessWidget {
               );
             }),
           )
-        : const Text("Empty");
+        : const Center(child: Text("Empty"));
   }
 }
 
@@ -253,24 +423,52 @@ class PrintDocuments extends StatelessWidget {
                 (int index) {
               return ContainerBorderWidget(
                 inContainer: Center(
-                  child: CustomSimpleButton(
-                    onPress: () {
-                      controller.Document =
-                          controller.AllDocuments![index]["id"];
-                      controller.GetDocFromCall(
-                        controller.Collection,
-                        controller.Document,
-                      );
-                    },
-                    child: Text(
-                      controller.AllDocuments![index]["id"],
-                    ),
+                  child: Row(
+                    children: <Widget>[
+                      ContainerBorderWidget(
+                        borderStyle: const Border(
+                          right: BorderSide(
+                            width: 1.0,
+                            color: Color(0x0),
+                          ),
+                        ),
+                        flexSize: 8,
+                        inContainer: CustomSimpleButton(
+                          onPress: () {
+                            print("PrintDocuments");
+                            controller.Document =
+                                controller.AllDocuments![index]["id"];
+                            controller.GetDocFromCall(
+                              controller.Collection,
+                              controller.Document,
+                            );
+                          },
+                          child: Text(
+                            controller.AllDocuments![index]["id"],
+                          ),
+                        ),
+                      ),
+                      ContainerBorderWidget(
+                        borderStyle: const Border(
+                          right: BorderSide(
+                            width: 1.0,
+                            color: Color(0x00000000),
+                          ),
+                        ),
+                        inContainer: CustomSimpleButton(
+                          onPress: () {
+                            controller.deleteFromDocColl(controller.Collection, controller.AllDocuments![index]["id"]);
+                          },
+                          child: const Center(child: Text(" - ")),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               );
             }),
           )
-        : const Text("Empty");
+        : const Center(child: Text("Empty"));
   }
 }
 
@@ -289,9 +487,13 @@ class PrintCollection extends StatelessWidget {
             children: List<Widget>.generate(controller.AllCollections!.length,
                 (int index) {
               return ContainerBorderWidget(
+                borderStyle: const Border(
+                  bottom: BorderSide(width: 1.0, color: Color(0x00000000)),
+                ),
                 inContainer: Center(
                   child: CustomSimpleButton(
                     onPress: () {
+                      print("PrintCollection");
                       controller.Collection =
                           controller.AllCollections![index]["id"];
                       controller.GetRefDocOfCollections(
@@ -306,7 +508,7 @@ class PrintCollection extends StatelessWidget {
               );
             }),
           )
-        : const Text("Empty");
+        : const Center(child: Text("Empty"));
   }
 }
 
@@ -335,10 +537,7 @@ class ContainerBorderWidget extends StatelessWidget {
                 ),
               ),
         ),
-        child: inContainer ??
-            const Center(
-              child: Text("Default Values"),
-            ),
+        child: inContainer ?? const Center(child: Text("Default Values")),
       ),
     );
   }

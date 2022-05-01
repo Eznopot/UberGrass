@@ -30,7 +30,6 @@ async function selectInArray(arr, start, end) {
 
 /* require and setUp FireBase Env */
 
-// const firebase = require("firebase-app");
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp(functions.config().admin);
@@ -56,14 +55,6 @@ async function getTable(tableName) {
   return map;
 }
 
-// async function createMappingData(data) {
-//   const map = [];
-//   data.forEach((elem) => {
-//     map.push(elem.data());
-//   });
-//   return map;
-// }
-
 async function createMappingDataId(data) {
   const map = [];
   data.forEach((elem) => {
@@ -74,12 +65,6 @@ async function createMappingDataId(data) {
   });
   return map;
 }
-
-// async function deleteDoc(_data) {
-//   _data.forEach(async (doc) => {
-//     await doc.delete();
-//   });
-// }
 
 /* Collections Functions */
 
@@ -93,6 +78,23 @@ exports.GetAllCollection = functions.https.onCall(async () => {
 });
 
 /* Doc Functions */
+
+exports.SetDataFromDocColl = functions.https.onCall(async (data) => {
+  await db.collection(data.callName).doc(data.docName).update({
+    [data.key]: data.value,
+  });
+  return;
+});
+
+exports.CreateFromDocColl = functions.https.onCall(async (data) => {
+  await db.collection(data.callName).add({});
+  return;
+});
+
+exports.deleteFromDocColl = functions.https.onCall(async (data) => {
+  await db.collection(data.callName).doc(data.docName).delete();
+  return;
+});
 
 exports.GetDocFromCall = functions.https.onCall(async (data) => {
   const _Doc = await db.collection(data.callName).doc(data.docName).get();
@@ -123,26 +125,12 @@ exports.UserLogin = functions.auth.user().onCreate(async (usr) => {
   return true;
 });
 
-let debugI = 0;
-
-async function debug(_name, _data) {
-  db.collection("debug").doc(JSON.stringify(
-      new Date().getDate().toString())).update({
-    [`${debugI}`]: JSON.stringify({name: _name, data: _data}),
-  });
-  debugI++;
-}
-
 exports.UserDelete = functions.auth.user().onDelete(async (data) => {
-  debug("data.uid", data.uid);
   const _user = db.collection("Users").doc(data.uid);
-  debug("_user", _user);
   const user = await _user.get();
-  debug("user", user);
 
   const _Articles = await db.collection("Articles")
       .where("CreateBy", "==", data.uid).get();
-  debug("_Articles", _Articles);
   _Articles.forEach((doc) => {
     doc.ref.delete();
   });
@@ -298,69 +286,6 @@ exports.buyArticles = functions.https.onCall(async (data, context) => {
 
   await db.collection("Ordered").add(Ordered);
   return true;
-});
-
-/* Order Functions */
-
-exports.getOrderInGroup = functions.https.onCall(async (data, context) => {
-  if (!getMyRight(context, "Read", "Ordered")) {
-    return;
-  }
-
-  const docUser = db.collection("Users").doc(context.auth.uid);
-  const usr = await docUser.get();
-  const _Groups = db.collection("Groups").doc(usr.data().Groups);
-  const group = await _Groups.get();
-  const _idSeller = await group.data().Who.Seller;
-  const mapA = await db.collection("Ordered")
-      .where("Seller", "in", _idSeller).get();
-
-  let mapSeller = [];
-  mapA.forEach((m) => {
-    const Seller = db.collection("Users").doc(m.data().Seller).get();
-    mapSeller.push({
-      Seller: Seller,
-      Quantity: m.data().quantity,
-      Address_Buyer: m.data().Address,
-    });
-  });
-  mapSeller = await Promise.all(mapSeller);
-  // mapSeller.forEach((m) => {
-  //   m.Seller = m.Seller.data().Address;
-  // });
-  return mapSeller;
-  // let mapSeller = [];
-  // mapA.forEach((m) => {
-  //   const Sellers = db.collection("Users").doc(m.data().Seller).get();
-  //   mapSeller.push(Sellers);
-  // });
-  // mapSeller = await Promise.all(mapSeller);
-
-  // let map = [];
-  // for (let index = 0; index < mapA.length; index++) {
-  //   const m = mapA[index];
-  //   const Sellers = mapSeller[index].data();
-  //   const _distance = distance.get({
-  //     origin: Sellers.data().Address,
-  //     destination: m.data().Address,
-  //   }, (err, data) => {
-  //     return (data);
-  //   });
-
-  //   map.push({
-  //     Address_Seller: Sellers.data().Address,
-  //     Quantity: m.data().Quantity,
-  //     Address_Buyer: m.data().Address,
-  //     distanceTime: _distance,
-  //   });
-  // }
-  // map = await Promise.all(map);
-  // return (map);
-  // return (map);
-  // return await selectInArray(
-  //     await createMappingDataId(mapA),
-  //     data.start,
-  //     data.end);
 });
 
 /* Roles Functions */
