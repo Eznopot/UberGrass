@@ -14,4 +14,42 @@ class AdminPageService {
     var res = await httpsCallable.call();
     return res.data.toString();
   }
+
+  Future<List<dynamic>?> GetAllCollections() async {
+    FirebaseFunctions function = FirebasePackage.getFunction();
+    var httpsCallable = function.httpsCallable("GetAllCollection");
+    final response = await httpsCallable.call();
+    if (response.data == null || response.data.length == 0) {
+      return null;
+    }
+    List<dynamic> res = [];
+    for (dynamic elem in response.data) {
+      res.add({"id" : elem["id"]});
+    }
+    return res;
+  }
+
+  Future<List<dynamic>?> GetRefDocOfCollections(String DocName) async {
+    FirebaseFunctions function = FirebasePackage.getFunction();
+    var httpsCallable = function.httpsCallable("GetAllDocOfCollection");
+    final response = await httpsCallable.call({"docName": DocName,});
+    if (response.data == null || response.data.length == 0) {
+      return null;
+    }
+    List<dynamic> res = [];
+    for (dynamic elem in response.data) {
+      res.add({"id" : elem["id"]});
+    }
+    return res;
+  }
+
+  Future<dynamic> GetDocFromCall(String callName, String docName) async {
+    FirebaseFunctions function = FirebasePackage.getFunction();
+    var httpsCallable = function.httpsCallable("GetDocFromCall");
+    final response = await httpsCallable.call({"docName": docName, "callName": callName,});
+    if (response.data == null) {
+      return null;
+    }
+    return response.data;
+  }
 }

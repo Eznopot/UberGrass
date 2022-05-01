@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ubergrass/src/widget/widget/button/custom_simple_button.dart';
 import 'package:ubergrass/src/widget/widget/button/progress_button.dart';
 import 'package:ubergrass/src/widget/widget/textfield/custom_text_field.dart';
 import '../../widget/widget/dialog/exit_will_pop.dart';
@@ -26,6 +28,12 @@ class _AdminPageViewState extends State<AdminPageView> {
   @override
   void initState() {
     super.initState();
+
+    controller.addListener(() {
+      setState(() {});
+    });
+
+    controller.GetAllCollections();
   }
 
   @override
@@ -59,30 +67,15 @@ class _AdminPageViewState extends State<AdminPageView> {
                 child: Container(
                   color: const Color.fromARGB(255, 134, 134, 134),
                   child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
                         decoration: BoxDecoration(
                             border: Border.all(
                                 color: const Color.fromARGB(50, 0, 0, 0))),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            ContainerBorderWidget(
-                                inContainer: const Center(child: Text("User"))),
-                            ContainerBorderWidget(
-                                inContainer:
-                                    const Center(child: Text("Groups"))),
-                            ContainerBorderWidget(
-                                inContainer:
-                                    const Center(child: Text("Roles"))),
-                            ContainerBorderWidget(
-                                inContainer:
-                                    const Center(child: Text("Rights"))),
-                            ContainerBorderWidget(
-                                flexSize: 4, inContainer: const Text("")),
-                          ],
-                        ),
-                      )),
+                        child: PrintCollection(
+                          controller: controller,
+                        )),
+                  ),
                 ),
               ),
               Expanded(
@@ -92,18 +85,18 @@ class _AdminPageViewState extends State<AdminPageView> {
                   child: Row(
                     children: <Widget>[
                       ContainerBorderWidget(
-                        flexSize: 3,
-                        inContainer: Column(
-                          children: <Widget>[
-                            ContainerBorderWidget(flexSize: 10),
-                            ContainerBorderWidget(flexSize: 10),
-                            ContainerBorderWidget(flexSize: 10),
-
-                          ],
-                        ),
+                          flexSize: 3,
+                          inContainer: PrintDocuments(
+                            controller: controller,
+                          )),
+                      ContainerBorderWidget(
+                        flexSize: 10,
+                        inContainer: modifyData(controller: controller),
                       ),
-                      ContainerBorderWidget(flexSize: 10),
-                      ContainerBorderWidget(flexSize: 3),
+                      ContainerBorderWidget(
+                        flexSize: 5,
+                        inContainer: PrintData(controller: controller),
+                      ),
                     ],
                   ),
                 ),
@@ -113,6 +106,207 @@ class _AdminPageViewState extends State<AdminPageView> {
         ),
       ),
     );
+  }
+}
+
+class modifyData extends StatelessWidget {
+  modifyData({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+  AdminPageController controller;
+  @override
+  Widget build(BuildContext context) {
+    return controller.AllData != null
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children:
+                List<Widget>.generate(controller.AllData!.length, (int index) {
+              return ContainerBorderWidget(
+                inContainer: Center(
+                  child: Row(
+                    children: <Widget>[
+                      ContainerBorderWidget(
+                        flexSize: 1,
+                        borderStyle: const Border(
+                          bottom:
+                              BorderSide(width: 1.0, color: Color(0xFF000000)),
+                        ),
+                        inContainer: Center(
+                          child: Text(
+                            controller.AllData!.entries
+                                .toList()[index]
+                                .key
+                                .toString(),
+                          ),
+                        ),
+                      ),
+                      ContainerBorderWidget(
+                        flexSize: 4,
+                        borderStyle: const Border(
+                          bottom:
+                              BorderSide(width: 1.0, color: Color(0xFF000000)),
+                        ),
+                        inContainer: Center(
+                          child: WriteData()
+                          }
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          )
+        : const Text("Empty");
+  }
+}
+class WriteData extends StatelessWidget {
+  WriteData({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+  AdminPageController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return
+  }
+}
+
+class PrintData extends StatelessWidget {
+  PrintData({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+  AdminPageController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return controller.AllData != null
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children:
+                List<Widget>.generate(controller.AllData!.length, (int index) {
+              return ContainerBorderWidget(
+                inContainer: Center(
+                  child: Row(
+                    children: <Widget>[
+                      ContainerBorderWidget(
+                        flexSize: 1,
+                        borderStyle: const Border(
+                          right:
+                              BorderSide(width: 1.0, color: Color(0xFF000000)),
+                          bottom:
+                              BorderSide(width: 1.0, color: Color(0xFF000000)),
+                        ),
+                        inContainer: Center(
+                          child: Text(
+                            controller.AllData!.entries
+                                .toList()[index]
+                                .key
+                                .toString(),
+                          ),
+                        ),
+                      ),
+                      ContainerBorderWidget(
+                        flexSize: 4,
+                        borderStyle: const Border(
+                          right:
+                              BorderSide(width: 1.0, color: Color(0xFF000000)),
+                          bottom:
+                              BorderSide(width: 1.0, color: Color(0xFF000000)),
+                        ),
+                        inContainer: Center(
+                          child: Text(
+                            controller.AllData!.entries
+                                .toList()[index]
+                                .value
+                                .toString(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          )
+        : const Text("Empty");
+  }
+}
+
+class PrintDocuments extends StatelessWidget {
+  PrintDocuments({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+  AdminPageController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return controller.AllDocuments != null
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: List<Widget>.generate(controller.AllDocuments!.length,
+                (int index) {
+              return ContainerBorderWidget(
+                inContainer: Center(
+                  child: CustomSimpleButton(
+                    onPress: () {
+                      controller.Document =
+                          controller.AllDocuments![index]["id"];
+                      controller.GetDocFromCall(
+                        controller.Collection,
+                        controller.Document,
+                      );
+                    },
+                    child: Text(
+                      controller.AllDocuments![index]["id"],
+                    ),
+                  ),
+                ),
+              );
+            }),
+          )
+        : const Text("Empty");
+  }
+}
+
+class PrintCollection extends StatelessWidget {
+  PrintCollection({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+  AdminPageController controller;
+
+  @override
+  build(BuildContext context) {
+    return controller.AllCollections != null
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: List<Widget>.generate(controller.AllCollections!.length,
+                (int index) {
+              return ContainerBorderWidget(
+                inContainer: Center(
+                  child: CustomSimpleButton(
+                    onPress: () {
+                      controller.Collection =
+                          controller.AllCollections![index]["id"];
+                      controller.GetRefDocOfCollections(
+                        controller.Collection,
+                      );
+                    },
+                    child: Text(
+                      controller.AllCollections![index]["id"],
+                    ),
+                  ),
+                ),
+              );
+            }),
+          )
+        : const Text("Empty");
   }
 }
 
@@ -141,7 +335,10 @@ class ContainerBorderWidget extends StatelessWidget {
                 ),
               ),
         ),
-        child: inContainer ?? const Center(child: Text("Default Values")),
+        child: inContainer ??
+            const Center(
+              child: Text("Default Values"),
+            ),
       ),
     );
   }

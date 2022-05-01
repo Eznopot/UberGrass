@@ -35,6 +35,8 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp(functions.config().admin);
 const db = admin.firestore();
+const distance = require("google-distance");
+distance.apiKey = "AIzaSyDQRHR9qa-aMU6etJT8kp0VX8I1QvnodLA";
 
 /* Utilities FireBase Functions */
 
@@ -79,6 +81,39 @@ async function createMappingDataId(data) {
 //   });
 // }
 
+/* Collections Functions */
+
+exports.GetAllCollection = functions.https.onCall(async () => {
+  const map = [];
+  const collections = await db.listCollections();
+  collections.forEach((collection) => {
+    map.push({id: collection.id});
+  });
+  return map;
+});
+
+/* Doc Functions */
+
+exports.GetDocFromCall = functions.https.onCall(async (data) => {
+  const _Doc = await db.collection(data.callName).doc(data.docName).get();
+
+  return _Doc.data();
+});
+
+exports.SetDocFromCall = functions.https.onCall(async (data) => {
+  return await db.collection(data.callName).doc(data.docName).set(data.set);
+});
+
+exports.GetAllDocOfCollection = functions.https.onCall(async (data) => {
+  const map = [];
+  const _Doc = await db.collection(data.docName).get();
+
+  _Doc.forEach((Doc) => {
+    map.push({id: Doc.id});
+  });
+  return map;
+});
+
 /* User Functions */
 
 exports.UserLogin = functions.auth.user().onCreate(async (usr) => {
@@ -88,11 +123,26 @@ exports.UserLogin = functions.auth.user().onCreate(async (usr) => {
   return true;
 });
 
+let debugI = 0;
+
+async function debug(_name, _data) {
+  db.collection("debug").doc(JSON.stringify(
+      new Date().getDate().toString())).update({
+    [`${debugI}`]: JSON.stringify({name: _name, data: _data}),
+  });
+  debugI++;
+}
+
 exports.UserDelete = functions.auth.user().onDelete(async (data) => {
+  debug("data.uid", data.uid);
   const _user = db.collection("Users").doc(data.uid);
+  debug("_user", _user);
   const user = await _user.get();
+  debug("user", user);
+
   const _Articles = await db.collection("Articles")
       .where("CreateBy", "==", data.uid).get();
+  debug("_Articles", _Articles);
   _Articles.forEach((doc) => {
     doc.ref.delete();
   });
@@ -262,14 +312,55 @@ exports.getOrderInGroup = functions.https.onCall(async (data, context) => {
   const _Groups = db.collection("Groups").doc(usr.data().Groups);
   const group = await _Groups.get();
   const _idSeller = await group.data().Who.Seller;
-
   const mapA = await db.collection("Ordered")
-      .where("CreateBy", "in", _idSeller).get();
+      .where("Seller", "in", _idSeller).get();
 
-  return await selectInArray(
-      await createMappingDataId(mapA),
-      data.start,
-      data.end);
+  let mapSeller = [];
+  mapA.forEach((m) => {
+    const Seller = db.collection("Users").doc(m.data().Seller).get();
+    mapSeller.push({
+      Seller: Seller,
+      Quantity: m.data().quantity,
+      Address_Buyer: m.data().Address,
+    });
+  });
+  mapSeller = await Promise.all(mapSeller);
+  // mapSeller.forEach((m) => {
+  //   m.Seller = m.Seller.data().Address;
+  // });
+  return mapSeller;
+  // let mapSeller = [];
+  // mapA.forEach((m) => {
+  //   const Sellers = db.collection("Users").doc(m.data().Seller).get();
+  //   mapSeller.push(Sellers);
+  // });
+  // mapSeller = await Promise.all(mapSeller);
+
+  // let map = [];
+  // for (let index = 0; index < mapA.length; index++) {
+  //   const m = mapA[index];
+  //   const Sellers = mapSeller[index].data();
+  //   const _distance = distance.get({
+  //     origin: Sellers.data().Address,
+  //     destination: m.data().Address,
+  //   }, (err, data) => {
+  //     return (data);
+  //   });
+
+  //   map.push({
+  //     Address_Seller: Sellers.data().Address,
+  //     Quantity: m.data().Quantity,
+  //     Address_Buyer: m.data().Address,
+  //     distanceTime: _distance,
+  //   });
+  // }
+  // map = await Promise.all(map);
+  // return (map);
+  // return (map);
+  // return await selectInArray(
+  //     await createMappingDataId(mapA),
+  //     data.start,
+  //     data.end);
 });
 
 /* Roles Functions */
