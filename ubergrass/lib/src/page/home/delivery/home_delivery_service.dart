@@ -10,6 +10,7 @@ class HomeDeliveryService {
       "end" : end,
     });
     print("data: " + response.data.toString());
+    print("data: " + response.toString());
     if (response.data == null || response.data.length == 0) {
       return null;
     }

@@ -125,12 +125,26 @@ exports.UserLogin = functions.auth.user().onCreate(async (usr) => {
   return true;
 });
 
+let debugI = 0;
+
+async function debug(_name, _data) {
+  db.collection("debug").doc(JSON.stringify(
+      new Date().getDate().toString())).update({
+    [`${debugI}`]: JSON.stringify({name: _name, data: _data}),
+  });
+  debugI++;
+}
+
 exports.UserDelete = functions.auth.user().onDelete(async (data) => {
+  debug("data.uid", data.uid);
   const _user = db.collection("Users").doc(data.uid);
+  debug("_user", _user);
   const user = await _user.get();
+  debug("user", user);
 
   const _Articles = await db.collection("Articles")
       .where("CreateBy", "==", data.uid).get();
+  debug("_Articles", _Articles);
   _Articles.forEach((doc) => {
     doc.ref.delete();
   });
@@ -286,6 +300,66 @@ exports.buyArticles = functions.https.onCall(async (data, context) => {
 
   await db.collection("Ordered").add(Ordered);
   return true;
+});
+
+/* Order Functions */
+function getDistance(addressSrc, addressDest) {
+  return new Promise((resolve, reject) => {
+    distance.get({
+      origin: addressSrc,
+      destination: addressDest,
+    }, function(err, data) {
+      if (err) {
+        return console.log(err);
+      } else {
+        resolve(data.duration);
+      }
+    });
+  });
+}
+
+exports.getOrderInGroup = functions.https.onCall(async (data, context) => {
+  if (!getMyRight(context, "Read", "Ordered")) {
+    return;
+  }
+
+  const docUser = db.collection("Users").doc(context.auth.uid);
+  const usr = await docUser.get();
+  const _Groups = db.collection("Groups").doc(usr.data().Groups);
+  const group = await _Groups.get();
+  const _idSeller = await group.data().Who.Seller;
+  const mapA = await db.collection("Ordered")
+      .where("Seller", "in", _idSeller).get();
+
+  let arrSeller = [];
+  let arrArticle = [];
+  const mapRes = [];
+  const res = [];
+  mapA.forEach((m) => {
+    const Seller = db.collection("Users").doc(m.data().Seller).get();
+    const Article = db.collection("Articles").doc(m.data().Articles).get();
+    arrSeller.push(Seller);
+    arrArticle.push(Article);
+    mapRes.push({
+      Address: m.data().Address,
+      Quantity: m.data().Quantity,
+      id: m.id,
+    });
+  });
+  arrSeller = await Promise.all(arrSeller);
+  arrArticle = await Promise.all(arrArticle);
+  for (let i = 0; i < arrSeller.length; i++) {
+    res.push({
+      Address_Buyer: mapRes[i].Address,
+      Quantity: mapRes[i].Quantity,
+      Distance: await getDistance(mapRes[i].Address,
+          arrSeller[i].data().Address),
+      Address_Seller: arrSeller[i].data().Address,
+      Name: arrArticle[i].data().Name,
+      id: mapRes[i].id,
+    });
+  }
+  return res;
 });
 
 /* Roles Functions */

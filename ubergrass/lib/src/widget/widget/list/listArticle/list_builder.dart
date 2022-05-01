@@ -31,7 +31,7 @@ class ListBuilder extends StatelessWidget {
         maxChar: 20,
         scrollController: scrollController,
         position: position,
-        onPressDelete: onDelete ?? () {},
+        onPressDelete: onDelete,
         onPressCard: onPressed ?? () {},
       ),
     );
