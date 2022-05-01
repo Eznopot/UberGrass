@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ubergrass/src/page/admin_page/admin_page_view.dart';
 import 'package:ubergrass/src/page/article_visualisation/article_visualisation_view.dart';
 import 'package:ubergrass/src/page/complete_information/complete_information_view.dart';
+import 'package:ubergrass/src/page/delivery_page/delivery_page_view.dart';
 import 'package:ubergrass/src/page/edit_article/edit_article_view.dart';
 import 'package:ubergrass/src/page/home/buyer/home_buyer_view.dart';
 import 'package:ubergrass/src/page/home/delivery/home_delivery_view.dart';
@@ -61,6 +62,8 @@ class MyApp extends StatelessWidget {
                     return const HomeDeliveryView();
                   case SelectAddressView.routeName:
                     return SelectAddressView();
+                  case DeliveryPageView.routeName:
+                    return const DeliveryPageView();
                   case EditArticleView.routeName:
                     if (routeSettings.arguments != null) {
                       return EditArticleView(data: routeSettings.arguments);

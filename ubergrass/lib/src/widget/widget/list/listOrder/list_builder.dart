@@ -9,16 +9,14 @@ class ListBuilderOrder extends StatelessWidget {
       required this.animation,
       required this.scrollController,
       required this.position,
-      this.onDelete,
-      this.onPressed
+      this.onAccept
       })
       : super(key: key);
   int position;
   List<dynamic> list;
   Animation<double> animation;
   final ScrollController scrollController;
-  VoidCallback? onDelete;
-  VoidCallback? onPressed;
+  VoidCallback? onAccept;
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +26,11 @@ class ListBuilderOrder extends StatelessWidget {
         end: const Offset(0, 0),
       ).animate(animation),
       child: ListElementOrder(
-        map: list[position]["data"],
+        map: list[position],
         maxChar: 20,
         scrollController: scrollController,
         position: position,
-        onPressDelete: onDelete ?? () {},
-        onPressCard: onPressed ?? () {},
+        onAccept: onAccept ?? () {},
       ),
     );
   }

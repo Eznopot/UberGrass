@@ -3,9 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../constant/size.dart';
 import '../../../widget/widget/dialog/exit_will_pop.dart';
+import '../../../widget/widget/dialog/loading_dialog.dart';
 import '../../../widget/widget/drawer.dart';
 import '../../../widget/widget/list/listOrder/list_builder.dart';
 import '../../article_visualisation/article_visualisation_view.dart';
+import '../../delivery_page/delivery_page_view.dart';
 import 'home_delivery_controller.dart';
 
 class HomeDeliveryView extends StatefulWidget {
@@ -22,7 +24,6 @@ class _HomeDeliveryViewState extends State<HomeDeliveryView> {
   HomeDeliveryController controller = HomeDeliveryController();
   List<dynamic>? list;
   bool isInserted = true;
-
 
   insertArticle(int index) {
     if (list == null) return;
@@ -51,7 +52,7 @@ class _HomeDeliveryViewState extends State<HomeDeliveryView> {
 
   @override
   void initState() {
-    controller.getArticles(0, 10).then((value) {
+    controller.getOrders(0, 10).then((value) {
       list = value;
       setState(() {
         loadArticle();
@@ -65,7 +66,7 @@ class _HomeDeliveryViewState extends State<HomeDeliveryView> {
         int index = list!.length;
         if (maxScroll - currentScroll <= delta && isInserted) {
           controller
-              .getArticles(index, MediaQuery.of(context).size.height ~/ 30)
+              .getOrders(index, MediaQuery.of(context).size.height ~/ 30)
               .then((value) {
             if (value != null) {
               list!.addAll(value);
@@ -121,10 +122,25 @@ class _HomeDeliveryViewState extends State<HomeDeliveryView> {
                                   animation: animation,
                                   list: list!,
                                   scrollController: scrollController,
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, ArticleVisualisationView.routeName, arguments: list![index]);
-                                  }
-                              );
+                                  onAccept: () {
+                                    showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return const LoadingDialog(
+                                              title: "Buying...");
+                                        });
+                                    controller
+                                        .acceptOrder(list![index]["id"])
+                                        .then((value) {
+                                      if (value) {
+                                        Navigator.of(context).pop(true);
+                                        if (value) {
+                                          Navigator.of(context).pushNamed(DeliveryPageView.routeName);
+                                        }
+                                      }
+                                    });
+                                  });
                             },
                           ),
                         )

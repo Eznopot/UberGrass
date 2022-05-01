@@ -24,6 +24,7 @@ class _SelectAddressViewState extends State<SelectAddressView> {
             children:[
               GoogleMap(
                 zoomGesturesEnabled: true,
+                myLocationEnabled: true,
                 initialCameraPosition: CameraPosition(
                   target: startLocation,
                   zoom: 14.0,
