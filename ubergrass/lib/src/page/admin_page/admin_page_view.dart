@@ -1,17 +1,10 @@
-import 'dart:html';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ubergrass/src/widget/widget/button/custom_simple_button.dart';
 import 'package:ubergrass/src/widget/widget/button/progress_button.dart';
 import 'package:ubergrass/src/widget/widget/textfield/custom_text_field.dart';
 import '../../widget/widget/dialog/exit_will_pop.dart';
-import '../complete_information/complete_information_view.dart';
-import '../../constant/size.dart';
-import '../../widget/widget/placement/custom_center.dart';
 import 'admin_page_controller.dart';
 
 class AdminPageView extends StatefulWidget {

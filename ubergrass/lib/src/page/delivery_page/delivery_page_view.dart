@@ -3,6 +3,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 
+import '../home/delivery/home_delivery_view.dart';
 import 'delivery_page_controller.dart';
 
 class DeliveryPageView extends StatefulWidget {
@@ -20,6 +21,7 @@ class _DeliveryPageViewState extends State<DeliveryPageView> {
   LatLng startLocation = const LatLng(0, 0);
   DeliveryPageController controller = DeliveryPageController();
   dynamic order;
+  String? id;
   Map<PolylineId, Polyline> _polylines = {};
 
   Future<Map<PolylineId, Polyline>> getPolyline(String addressStart, String addressDest) async {
@@ -66,6 +68,7 @@ class _DeliveryPageViewState extends State<DeliveryPageView> {
   initState() {
     controller.getOrder().then((value) {
         order = value["data"];
+        id = value["id"];
         getPolyline(order["Address"], value["Seller_Address"]).then((value) {
           setState(() {
             _polylines = value;
@@ -99,6 +102,13 @@ class _DeliveryPageViewState extends State<DeliveryPageView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          if (id != null) {
+            controller.deleteOrder(id!).then((value) {
+              if (value) {
+                Navigator.pushNamed(context, HomeDeliveryView.routeName);
+              }
+            });
+          }
         },
         child: const Icon(Icons.check),
       ),

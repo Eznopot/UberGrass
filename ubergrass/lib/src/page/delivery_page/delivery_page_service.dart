@@ -8,7 +8,6 @@ class DeliveryPageService {
     FirebaseFunctions function = FirebasePackage.getFunction();
     HttpsCallable callable = function.httpsCallable("getOrdered");
     final response = await callable();
-    print(response.data);
     if (response.data == null || response.data.length == 0) {
       return null;
     }
@@ -16,6 +15,12 @@ class DeliveryPageService {
   }
 
   Future<bool> deleteOrder(String id) async {
+    FirebaseFunctions function = FirebasePackage.getFunction();
+    HttpsCallable callable = function.httpsCallable("removeOrder");
+    final response = await callable.call({
+      "id": id,
+    });
+    print(response.data);
     return true;
   }
 }
