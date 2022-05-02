@@ -128,7 +128,7 @@ class _HomeDeliveryViewState extends State<HomeDeliveryView> {
                                         barrierDismissible: false,
                                         builder: (BuildContext context) {
                                           return const LoadingDialog(
-                                              title: "Buying...");
+                                              title: "Load order...");
                                         });
                                     controller
                                         .acceptOrder(list![index]["id"])
